@@ -2,30 +2,47 @@ express = require 'express'
 fs = require 'fs'
 
 # TODO:
-# make americano plugin as npm package
-# add comments to this file
+# make americano plugin as a npm package
 # add tests
 # find a way to manage juggling model properly
+
 # americano wraps express
 module.exports = americano = express
 
 # root folder, required to find the configuration files
-# TODO make it parameterable.
 root = process.cwd()
 
-config = []
+# Default configuration, used if no configuration file is found.
+config =
+    common: [
+        americano.bodyParser()
+        americano.methodOverride()
+        americano.errorHandler
+            dumpExceptions: true
+            showStack: true
+        americano.static __dirname + '/client/public',
+            maxAge: 86400000
+    ]
+    development: [
+        americano.logger 'dev'
+    ]
+    production: [
+        americano.logger 'short'
+    ]
 
+
+# Load configuration file then load configuration for each environment.
 _configure = (app) ->
-
     try
         config = require "#{root}/config"
     catch err
         console.log err
         console.log "Can't load config file, use default one instead"
 
-    process.env.NODE_ENV = 'development' unless process.env.NODE_ENV?
     _configureEnv app, env, middlewares for env, middlewares of config
 
+
+# Load express/connect middlewares found in the configuration file.
 _configureEnv = (app, env, middlewares) ->
     if env is 'common'
         app.use middleware for middleware in middlewares
@@ -33,8 +50,9 @@ _configureEnv = (app, env, middlewares) ->
         app.configure env, =>
             app.use middleware for middleware in middlewares
 
-_loadRoutes = (app) ->
 
+# Load all routes found in the routes file.
+_loadRoutes = (app) ->
     try
         routes = require "#{root}/controllers/routes"
     catch err
@@ -46,27 +64,26 @@ _loadRoutes = (app) ->
 
     for path, controllers of routes
         for verb, controller of controllers
-            for name, action of controller
-                try
-                    app[verb] path, \
-                              require("#{root}/controllers/#{name}")[action]
-                catch e
-                    console.log "Can't load controller for " + \
-                                "route #{verb} #{path} #{action}"
-                    process.exit 1
+            _loadRoute app, path, verb, controller
+
+
+# Load given route in the Express app.
+_loadRoute = (app, path, verb, controller) ->
+    for name, action of controller
+        try
+            app[verb] path, require("#{root}/controllers/#{name}")[action]
+        catch e
+            console.log "Can't load controller for " + \
+                        "route #{verb} #{path} #{action}"
+            process.exit 1
+
 
 _loadPlugin = (app, plugin, callback) ->
     console.log "add plugin: #{plugin}"
-    require("#{root}/plugins/#{plugin}") app, callback
+    require("#{root}/node_modules/#{plugin}") root, app, callback
 
 _loadPlugins = (app, callback) ->
-    pluginList = []
-
-    for plugin in fs.readdirSync "#{root}/plugins"
-        fileExtension = plugin.substring(plugin.length - 7, plugin.length)
-        if  fileExtension is '.coffee'
-            name = plugin.substring 0, plugin.length - 7
-            pluginList.push name
+    pluginList = config.plugins
 
     _loadPluginList = (list) ->
         if list.length > 0
@@ -82,6 +99,8 @@ _loadPlugins = (app, callback) ->
 
     _loadPluginList pluginList
 
+
+# Set the express application: configure the app, load routes and plugins.
 _new = (callback) ->
     app = americano()
     _configure app
@@ -89,9 +108,13 @@ _new = (callback) ->
     _loadPlugins app, ->
         callback app
 
+
+# Clean options, configure the application then starts the server.
 americano.start = (options, callback) ->
+    process.env.NODE_ENV = 'development' unless process.env.NODE_ENV?
     port = options.port || 3000
-    console.log process.cwd()
+    root = options.root if options.root?
+
     _new (app) ->
         app.listen port
         options.name ?= "Americano"

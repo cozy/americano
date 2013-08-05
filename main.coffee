@@ -37,7 +37,7 @@ _configure = (app) ->
         config = require "#{root}/config"
     catch err
         console.log err
-        console.log "Can't load config file, use default one instead"
+        console.log "[WARN] Can't load config file, use default one instead"
 
     _configureEnv app, env, middlewares for env, middlewares of config
 
@@ -57,14 +57,16 @@ _loadRoutes = (app) ->
         routes = require "#{root}/controllers/routes"
     catch err
         console.log err
-        console.log "Route confiiguration file is missing, make sure " + \
-                    "routes.(coffee|js) is located at the root of the " + \
-                    "controlllers folder."
+        console.log "[WARN] Route confiiguration file is missing, make " + \
+                    "sure routes.(coffee|js) is located at the root of" + \
+                    " the controlllers folder."
         process.exit 1
 
     for path, controllers of routes
         for verb, controller of controllers
             _loadRoute app, path, verb, controller
+
+    console.log "[INFO] Routes loaded."
 
 
 # Load given route in the Express app.
@@ -73,13 +75,13 @@ _loadRoute = (app, path, verb, controller) ->
         try
             app[verb] path, require("#{root}/controllers/#{name}")[action]
         catch e
-            console.log "Can't load controller for " + \
+            console.log "[ERROR] Can't load controller for " + \
                         "route #{verb} #{path} #{action}"
             process.exit 1
 
 
 _loadPlugin = (app, plugin, callback) ->
-    console.log "add plugin: #{plugin}"
+    console.log "[INFO] add plugin: #{plugin}"
     require("#{root}/node_modules/#{plugin}") root, app, callback
 
 _loadPlugins = (app, callback) ->
@@ -90,9 +92,10 @@ _loadPlugins = (app, callback) ->
             plugin = list.pop()
             _loadPlugin app, plugin, (err) ->
                 if err
-                    console.log "#{plugin} failed to load."
+                    console.log "[ERROR] #{plugin} failed to load."
+                    process.exit 1
                 else
-                    console.log "#{plugin} loaded."
+                    console.log "[INFO] #{plugin} loaded."
                 _loadPluginList list
         else
             callback()
@@ -118,7 +121,8 @@ americano.start = (options, callback) ->
     _new (app) ->
         app.listen port
         options.name ?= "Americano"
-        console.log "#{options.name} server is listening on port #{port}..."
-        console.info "Configuration for #{process.env.NODE_ENV} loaded."
+        console.info "[INFO] Configuration for #{process.env.NODE_ENV} loaded."
+        console.info "[INFO] #{options.name} server is listening on " + \
+                    "port #{port}..."
 
         callback app if callback?

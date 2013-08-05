@@ -1,11 +1,28 @@
 express = require 'express'
 fs = require 'fs'
 
+# TODO:
+# make americano plugin as npm package
+# add comments to this file
+# add tests
+# find a way to manage juggling model properly
+# americano wraps express
 module.exports = americano = express
+
+# root folder, required to find the configuration files
+# TODO make it parameterable.
 root = process.cwd()
 
+config = []
+
 _configure = (app) ->
-    config = require "#{root}/config"
+
+    try
+        config = require "#{root}/config"
+    catch err
+        console.log err
+        console.log "Can't load config file, use default one instead"
+
     process.env.NODE_ENV = 'development' unless process.env.NODE_ENV?
     _configureEnv app, env, middlewares for env, middlewares of config
 
@@ -17,7 +34,16 @@ _configureEnv = (app, env, middlewares) ->
             app.use middleware for middleware in middlewares
 
 _loadRoutes = (app) ->
-    routes = require "#{root}/controllers/routes"
+
+    try
+        routes = require "#{root}/controllers/routes"
+    catch err
+        console.log err
+        console.log "Route confiiguration file is missing, make sure " + \
+                    "routes.(coffee|js) is located at the root of the " + \
+                    "controlllers folder."
+        process.exit 1
+
     for path, controllers of routes
         for verb, controller of controllers
             for name, action of controller
@@ -37,8 +63,8 @@ _loadPlugins = (app, callback) ->
     pluginList = []
 
     for plugin in fs.readdirSync "#{root}/plugins"
-        # TODO add support or js files
-        if plugin.substring(plugin.length - 7, plugin.length) is '.coffee'
+        fileExtension = plugin.substring(plugin.length - 7, plugin.length)
+        if  fileExtension is '.coffee'
             name = plugin.substring 0, plugin.length - 7
             pluginList.push name
 

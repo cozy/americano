@@ -23,3 +23,8 @@ task "build", "", ->
       console.log "Compilation succeeded."
 
     console.log stdout
+
+task "lint", "Run coffeelint on source files", ->
+    command = "coffeelint -f coffeelint.json main.coffee"
+    exec command, (err, stdout, stderr) ->
+        console.log stdout

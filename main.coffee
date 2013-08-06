@@ -1,11 +1,6 @@
 express = require 'express'
 fs = require 'fs'
 
-# TODO:
-# make americano plugin as a npm package
-# add tests
-# find a way to manage juggling model properly
-
 # americano wraps express
 module.exports = americano = express
 
@@ -71,18 +66,21 @@ _loadRoutes = (app) ->
 
 # Load given route in the Express app.
 _loadRoute = (app, path, verb, controller) ->
-    for name, action of controller
-        try
-            app[verb] path, require("#{root}/controllers/#{name}")[action]
-        catch e
-            console.log "[ERROR] Can't load controller for " + \
-                        "route #{verb} #{path} #{action}"
-            process.exit 1
+    try
+        app[verb] "/#{path}", controller
+
+    catch e
+        console.log "[ERROR] Can't load controller for " + \
+                    "route #{verb} #{path} #{action}"
+        process.exit 1
 
 
 _loadPlugin = (app, plugin, callback) ->
     console.log "[INFO] add plugin: #{plugin}"
-    require("#{root}/node_modules/#{plugin}") root, app, callback
+    try
+        require("#{root}/node_modules/#{plugin}").configure root, app, callback
+    catch err
+        callback err
 
 _loadPlugins = (app, callback) ->
     pluginList = config.plugins
@@ -92,6 +90,7 @@ _loadPlugins = (app, callback) ->
             plugin = list.pop()
             _loadPlugin app, plugin, (err) ->
                 if err
+                    console.log err
                     console.log "[ERROR] #{plugin} failed to load."
                     process.exit 1
                 else
@@ -117,12 +116,12 @@ americano.start = (options, callback) ->
     process.env.NODE_ENV = 'development' unless process.env.NODE_ENV?
     port = options.port || 3000
     root = options.root if options.root?
+    name = options.name || "Americano"
 
     _new (app) ->
         app.listen port
-        options.name ?= "Americano"
         console.info "[INFO] Configuration for #{process.env.NODE_ENV} loaded."
-        console.info "[INFO] #{options.name} server is listening on " + \
+        console.info "[INFO] #{name} server is listening on " + \
                     "port #{port}..."
 
         callback app if callback?

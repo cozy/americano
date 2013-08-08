@@ -20,14 +20,44 @@ Americano is not:
     npm install americano
 
 
-    # server.coffee
-    americano = require 'americano'
-    americano.start name: 'yourapp'
+```coffeescript
+# server.coffee
+americano = require 'americano'
+americano.start name: 'yourapp'
+```
 
 
 ## Configuration
 
-*work in progress...*
+Americano requires a config file located at the root of the project:
+
+```coffeescript
+# ./config.coffee
+americano = require 'americano'
+
+config =
+    common: [
+        americano.bodyParser()
+        americano.methodOverride()
+        americano.errorHandler
+            dumpExceptions: true
+            showStack: true
+        americano.static __dirname + '/client/public',
+            maxAge: 86400000
+    ]
+    development: [
+        americano.logger 'dev'
+    ]
+    production: [
+        americano.logger 'short'
+    ]
+    plugins: [
+        'americano-cozy'
+    ]
+
+module.exports = config
+```
+
 
 ## Routes
 

@@ -6,6 +6,8 @@ often leads to ugly code. To solve that, Americano acts as a
 wrapper around Express and make it more opiniated about how to write routes
 and configuration. See in the following how it make things cleaner.
 
+## When to use Americano?
+
 Americano is:
 
 * a tool to quickstart small web application or web module.
@@ -13,12 +15,16 @@ Americano is:
 
 Americano is not:
 
-* a full featured framework for making big web applications.
+* a full-featured framework for making big web applications.
 
-## Usage
+## Getting started
 
-    npm install americano
+To write an americano application you need to add it as dependecy of your
+package.json file.
 
+    npm install americano --save
+
+Then you must create the file that you will use to run your server.
 
 ```coffeescript
 # server.coffee
@@ -29,7 +35,8 @@ americano.start name: 'yourapp'
 
 ## Configuration
 
-Americano requires a config file located at the root of the project:
+There you will understand that Americano requires a config file located at the
+root of your project:
 
 ```coffeescript
 # ./config.coffee
@@ -61,7 +68,8 @@ module.exports = config
 
 ## Routes
 
-Put all your routes in a single file and read them in a clean way:
+Once configuration is done, Americano will ask you to Put all your routes in a 
+single file following this syntax:
 
 
 ```coffeescript
@@ -83,9 +91,13 @@ module.exports =
         get: comments.all
 ```
 
-## Directory structure
 
-This is how your single-page app look like with Americano:
+## Final thoughts
+
+You're done! Just run `coffee server.coffee` and you have your configured
+Express web server up and running!
+
+By the way this is how your single-page app looks like with Americano:
 
 
     your-blog/
@@ -95,7 +107,7 @@ This is how your single-page app look like with Americano:
             routes.coffee
             posts.coffee
             comments.coffee
-        mdoels/
+        models/
             post.coffee
             comment.coffee
         client/
@@ -103,7 +115,13 @@ This is how your single-page app look like with Americano:
 
 ## Plugins
 
-*work in progress...*
+Americano allows to use plugins that shares its philosophy of making cleaner
+and more straightforward things.
+
+Actually there is only one plugin, feel free to add yours:
+
+* [americano-cozy](https://github.com/frankrousseau/americano-cozy): a plugin 
+to make [Cozy](http://cozy.io) application faster.
 
 ## What about contributions?
 

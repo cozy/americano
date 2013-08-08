@@ -61,11 +61,45 @@ module.exports = config
 
 ## Routes
 
-*work in progress...*
+Put all your routes in a single file and read them in a clean way:
+
+
+```coffeescript
+# controllers/routes.coffee
+blogs = require './blogs'
+comments = require './comments'
+
+module.exports =
+    'posts':
+        get: posts.all
+        post: posts.create
+    'posts/:id':
+        get: posts.show
+        put: posts.modify
+        delete: posts.delete
+    'posts/:id/comments':
+        get: comments.fromPost
+    'comments':
+        get: comments.all
+```
 
 ## Directory structure
 
-*work in progress...*
+This is how your single-page app look like with Americano:
+
+
+    your-blog/
+        server.coffee
+        config.coffee
+        controllers/
+            routes.coffee
+            posts.coffee
+            comments.coffee
+        mdoels/
+            post.coffee
+            comment.coffee
+        client/
+            ... front-end stuff ...
 
 ## Plugins
 

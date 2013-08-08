@@ -1,5 +1,10 @@
+###
+# Unique file describing all the configuration steps done by americano.
+###
+
 express = require 'express'
 fs = require 'fs'
+
 
 # americano wraps express
 module.exports = americano = express
@@ -75,6 +80,7 @@ _loadRoute = (app, path, verb, controller) ->
         process.exit 1
 
 
+# Load given plugin by requiring it and running it as a function.
 _loadPlugin = (app, plugin, callback) ->
     console.log "[INFO] add plugin: #{plugin}"
     try
@@ -82,6 +88,8 @@ _loadPlugin = (app, plugin, callback) ->
     catch err
         callback err
 
+
+# Load plugins one by one then call given callback.
 _loadPlugins = (app, callback) ->
     pluginList = config.plugins
 

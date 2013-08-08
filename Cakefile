@@ -13,12 +13,13 @@ task 'tests', 'run tests through mocha', ->
     else
       process.exit 0
 
-task "build", "", ->
+task "build", "Compile coffee files to JS", ->
   console.log "Compile main file..."
   command = "coffee -c main.coffee"
   exec command, (err, stdout, stderr) ->
     if err
       console.log "Running coffee-script compiler caught exception: \n" + err
+      process.exit 1
     else
       console.log "Compilation succeeded."
 

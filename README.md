@@ -1,6 +1,7 @@
 # Americano
 
-Express is an awesome tool to build small web application. But once you start
+[ExpressJS](http://expressjs.com/)
+is an awesome tool to build small web application. But once you start
 using it, you discover that writing the configuration and the routes
 often leads to ugly code. To solve that, Americano acts as a
 wrapper around Express and make it more opiniated about how to write routes
@@ -10,16 +11,19 @@ and configuration. See in the following how it make things cleaner.
 
 Americano is:
 
-* a tool to quickstart small web application or web module.
+* a tool to quickstart small web applications or web modules.
 * oriented to build single page-app and REST API.
 
 Americano is not:
 
 * a full-featured framework for making big web applications.
 
+NB: Americano inherits all the [ExpressJS
+features](http://expressjs.com/guide.html)
+
 ## Getting started
 
-To write an americano application you need to add it as dependecy of your
+To write an Americano application you need to add it as dependecy of your
 package.json file.
 
     npm install americano --save

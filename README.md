@@ -24,10 +24,10 @@ package.json file.
 
     npm install americano --save
 
-Then you must create the file that you will use to run your server.
+Then you must to create your main file:
 
 ```coffeescript
-# server.coffee
+# ./server.coffee
 americano = require 'americano'
 americano.start name: 'yourapp'
 ```
@@ -35,8 +35,8 @@ americano.start name: 'yourapp'
 
 ## Configuration
 
-There you will understand that Americano requires a config file located at the
-root of your project:
+Americano requires a config file located at the
+root of your project, let's add it:
 
 ```coffeescript
 # ./config.coffee
@@ -68,8 +68,8 @@ module.exports = config
 
 ## Routes
 
-Once configuration is done, Americano will ask you to Put all your routes in a 
-single file following this syntax:
+Once configuration is done, Americano will ask for your routes to be described
+in a single file following this syntax:
 
 
 ```coffeescript

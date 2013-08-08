@@ -1,6 +1,6 @@
 {
   "name": "americano",
-  "description": 'Wrapper for Express with an opiniated configuration.',
+  "description": "Wrapper for Express with an opiniated configuration.",
   "keywords": [
     "framework"
   ],

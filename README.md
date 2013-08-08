@@ -1,10 +1,10 @@
 # Americano
 
-Express is an awesome tool to build small web application but when you start
-with it writing your routes and
-configuration often lead to an ugly code. To solve that, Americano acts as
+Express is an awesome tool to build small web application. But once you start
+using it, you discover that writing the configuration and the routes
+often leads to ugly code. To solve that, Americano acts as a
 wrapper around Express and make it more opiniated about how to write routes
-and configuration. See in the following what does that mean.
+and configuration. See in the following how it make things cleaner.
 
 ## Configuration
 

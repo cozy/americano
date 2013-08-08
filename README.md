@@ -1,8 +1,8 @@
 # Americano
 
 Express is an awesome tool to build small web application but when you start
-with it you don't know how to organize your code and writing your routes and
-configuration often lead to an ugly code. To solve that Americano acts as
+with it writing your routes and
+configuration often lead to an ugly code. To solve that, Americano acts as
 wrapper around Express and make it more opiniated about how to write routes
 and configuration. See in the following what does that mean.
 
@@ -15,6 +15,10 @@ and configuration. See in the following what does that mean.
 *work in progress...*
 
 ## Directory structure
+
+*work in progress...*
+
+## Plugins
 
 *work in progress...*
 

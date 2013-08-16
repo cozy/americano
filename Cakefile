@@ -3,7 +3,7 @@ fs = require 'fs'
 
 task 'tests', 'run tests through mocha', ->
   console.log "Run tests with Mocha..."
-  command = "mocha tests.coffee --reporter spec "
+  command = "cd tests && mocha tests.coffee --reporter spec "
   command += "--compilers coffee:coffee-script --colors"
   exec command, (err, stdout, stderr) ->
     console.log stdout

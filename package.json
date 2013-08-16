@@ -25,6 +25,7 @@
   },
   "devDependencies": {
     "coffee-script": "*",
+    "request-json": "*",
     "chai": "*",
     "mocha": "*"
   },

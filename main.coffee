@@ -39,11 +39,11 @@ _configure = (app) ->
         console.log err
         console.log "[WARN] Can't load config file, use default one instead"
 
-    _configureEnv app, env, middlewares for env, middlewares of config
-
+    for env, middlewares of config
+        americano._configureEnv app, env, middlewares
 
 # Load express/connect middlewares found in the configuration file.
-_configureEnv = (app, env, middlewares) ->
+americano._configureEnv = (app, env, middlewares) ->
     if env is 'common'
         app.use middleware for middleware in middlewares
     else
@@ -60,7 +60,7 @@ _loadRoutes = (app) ->
         console.log "[WARN] Route confiiguration file is missing, make " + \
                     "sure routes.(coffee|js) is located at the root of" + \
                     " the controlllers folder."
-        process.exit 1
+        console.log "[WARN] No routes loaded"
 
     for path, controllers of routes
         for verb, controller of controllers
@@ -73,10 +73,10 @@ _loadRoutes = (app) ->
 _loadRoute = (app, path, verb, controller) ->
     try
         app[verb] "/#{path}", controller
-
-    catch e
+    catch err
         console.log "[ERROR] Can't load controller for " + \
                     "route #{verb} #{path} #{action}"
+        console.log err
         process.exit 1
 
 
@@ -98,8 +98,8 @@ _loadPlugins = (app, callback) ->
             plugin = list.pop()
             _loadPlugin app, plugin, (err) ->
                 if err
-                    console.log err
                     console.log "[ERROR] #{plugin} failed to load."
+                    console.log err
                     process.exit 1
                 else
                     console.log "[INFO] #{plugin} loaded."
@@ -107,7 +107,10 @@ _loadPlugins = (app, callback) ->
         else
             callback()
 
-    _loadPluginList pluginList
+    if pluginList?.length > 0
+        _loadPluginList pluginList
+    else
+        callback()
 
 
 # Set the express application: configure the app, load routes and plugins.

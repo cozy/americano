@@ -32,7 +32,7 @@ config =
 
 
 # Load configuration file then load configuration for each environment.
-_configure = (app) ->
+americano._configure = (app) ->
     try
         config = require "#{root}/config"
     catch err
@@ -52,25 +52,25 @@ americano._configureEnv = (app, env, middlewares) ->
 
 
 # Load all routes found in the routes file.
-_loadRoutes = (app) ->
+americano._loadRoutes = (app) ->
     try
         routes = require "#{root}/controllers/routes"
     catch err
         console.log err
-        console.log "[WARN] Route confiiguration file is missing, make " + \
+        console.log "[WARN] Route configuration file is missing, make " + \
                     "sure routes.(coffee|js) is located at the root of" + \
                     " the controlllers folder."
         console.log "[WARN] No routes loaded"
 
     for path, controllers of routes
         for verb, controller of controllers
-            _loadRoute app, path, verb, controller
+            americano._loadRoute app, path, verb, controller
 
     console.log "[INFO] Routes loaded."
 
 
 # Load given route in the Express app.
-_loadRoute = (app, path, verb, controller) ->
+americano._loadRoute = (app, path, verb, controller) ->
     try
         app[verb] "/#{path}", controller
     catch err
@@ -81,7 +81,7 @@ _loadRoute = (app, path, verb, controller) ->
 
 
 # Load given plugin by requiring it and running it as a function.
-_loadPlugin = (app, plugin, callback) ->
+americano._loadPlugin = (app, plugin, callback) ->
     console.log "[INFO] add plugin: #{plugin}"
     try
         require("#{root}/node_modules/#{plugin}").configure root, app, callback
@@ -90,7 +90,7 @@ _loadPlugin = (app, plugin, callback) ->
 
 
 # Load plugins one by one then call given callback.
-_loadPlugins = (app, callback) ->
+americano._loadPlugins = (app, callback) ->
     pluginList = config.plugins
 
     _loadPluginList = (list) ->
@@ -114,11 +114,11 @@ _loadPlugins = (app, callback) ->
 
 
 # Set the express application: configure the app, load routes and plugins.
-_new = (callback) ->
+americano._new = (callback) ->
     app = americano()
-    _configure app
-    _loadRoutes app
-    _loadPlugins app, ->
+    americano._configure app
+    americano._loadRoutes app
+    americano._loadPlugins app, ->
         callback app
 
 
@@ -129,10 +129,10 @@ americano.start = (options, callback) ->
     root = options.root if options.root?
     name = options.name || "Americano"
 
-    _new (app) ->
-        app.listen port
+    americano._new (app) ->
+        server = app.listen port
         console.info "[INFO] Configuration for #{process.env.NODE_ENV} loaded."
         console.info "[INFO] #{name} server is listening on " + \
                     "port #{port}..."
 
-        callback app if callback?
+        callback app, server if callback?

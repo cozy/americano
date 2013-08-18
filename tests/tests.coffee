@@ -7,7 +7,7 @@ americano = require('../main')
 describe '_configureEnv', ->
     it 'should add given middlewares to given app and environment', (done) ->
         middlewares = [americano.bodyParser()]
-        americano.start {}, (app) ->
+        americano.start {}, (app, server) ->
             client = new JsonClient 'http://localhost:3000/'
 
             americano._configureEnv app, 'development', middlewares
@@ -23,9 +23,25 @@ describe '_configureEnv', ->
                     res.send 200
                 client.post 'test-2/', name: 'name_test', (err, res, body) ->
                     expect(err).to.be.null
+                    server.close()
                     done()
                 , false
 
 # Routes
+describe '_loadRoute', ->
+    it 'should add route to given app', (done) ->
+        americano.start {}, (app, server) ->
+            client = new JsonClient 'http://localhost:3000/'
+            client.get 'test/', (err, res, body) ->
+                expect(err).not.to.be.null
+                msg = 'test ok'
+                americano._loadRoute app, 'test/', 'get', (req, res) ->
+                    res.send msg: msg
+                client.get 'test/', (err, res, body) ->
+                    expect(body.msg).to.equal msg
+                    server.close()
+                    done()
+
 # Plugins
+
 # Create new server

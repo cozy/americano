@@ -77,7 +77,7 @@ in a single file following this syntax:
 
 
 ```coffeescript
-# controllers/routes.coffee
+# server/controllers/routes.coffee
 blogs = require './blogs'
 comments = require './comments'
 
@@ -107,13 +107,14 @@ By the way this is how your single-page app looks like with Americano:
     your-blog/
         server.coffee
         config.coffee
-        controllers/
-            routes.coffee
-            posts.coffee
-            comments.coffee
-        models/
-            post.coffee
-            comment.coffee
+        server/
+            controllers/
+                routes.coffee
+                posts.coffee
+                comments.coffee
+            models/
+                post.coffee
+                comment.coffee
         client/
             ... front-end stuff ...
 

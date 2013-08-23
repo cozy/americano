@@ -54,7 +54,7 @@ americano._configureEnv = (app, env, middlewares) ->
 # Load all routes found in the routes file.
 americano._loadRoutes = (app) ->
     try
-        routes = require "#{root}/controllers/routes"
+        routes = require "#{root}/server/controllers/routes"
     catch err
         console.log err
         console.log "[WARN] Route configuration file is missing, make " + \
@@ -96,7 +96,7 @@ americano._loadPlugins = (app, callback) ->
     _loadPluginList = (list) ->
         if list.length > 0
             plugin = list.pop()
-            _loadPlugin app, plugin, (err) ->
+            americano._loadPlugin app, plugin, (err) ->
                 if err
                     console.log "[ERROR] #{plugin} failed to load."
                     console.log err

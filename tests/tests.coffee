@@ -1,14 +1,14 @@
 expect = require('chai').expect
 americano = require('../main')
 
-{JsonClient} = require('request-json')
+request = require('request-json')
 
 # Configuration
 describe '_configureEnv', ->
     it 'should add given middlewares to given app and environment', (done) ->
         middlewares = [americano.bodyParser()]
         americano.start {}, (app, server) ->
-            client = new JsonClient 'http://localhost:3000/'
+            client = request.newClient 'http://localhost:3000/'
 
             americano._configureEnv app, 'development', middlewares
             app.post '/test-1/', (req, res) ->
@@ -31,7 +31,7 @@ describe '_configureEnv', ->
 describe '_loadRoute', ->
     it 'should add route to given app', (done) ->
         americano.start {}, (app, server) ->
-            client = new JsonClient 'http://localhost:3000/'
+            client = request.newClient 'http://localhost:3000/'
             client.get 'test/', (err, res, body) ->
                 expect(err).not.to.be.null
                 msg = 'test ok'

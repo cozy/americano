@@ -77,8 +77,8 @@ in a single file following this syntax:
 
 
 ```coffeescript
-# server/controllers/routes.coffee
-blogs = require './blogs'
+# ./server/controllers/routes.coffee
+posts = require './posts'
 comments = require './comments'
 
 module.exports =

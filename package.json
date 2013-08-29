@@ -21,7 +21,9 @@
   },
   "main": "./main.js",
   "dependencies": {
-    "express": "*"
+    "express": "*",
+    "commander": "~2.0.0",
+    "mkdirp": "~0.3.5"
   },
   "devDependencies": {
     "coffee-script": "*",

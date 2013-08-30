@@ -28,15 +28,15 @@ features](http://expressjs.com/guide.html)
 
 There is a binary provided with Americano to start quickly your project:
 
-### Install
+#### Install
 
     npm install americano -g
 
-### Usage
+#### Usage
 
     americano blog
 
-### Output
+#### Output
 
     create: blog
     create: blog/package.json
@@ -55,7 +55,7 @@ There is a binary provided with Americano to start quickly your project:
     Run your application:
     $ npm start
 
-### JS Usage
+#### JS Usage
 
     americano --js blog
 

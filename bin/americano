@@ -203,7 +203,7 @@ function write(path, str) {
 function mkdir(path, fn) {
   mkdirp(path, 0755, function(err){
     if (err) throw err;
-    console.log(' \033[36mcreate\033[0m : ' + path);
+    console.log(' \033[36mcreate\033[0m: ' + path);
     fn && fn();
   });
 }

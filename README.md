@@ -23,7 +23,45 @@ features](http://expressjs.com/guide.html)
 
 ## Getting started
 
-To write an Americano application you need to add it as dependecy of your
+
+### Binary
+
+There is a binary provided with Americano to start quickly your project:
+
+### Install
+
+    npm install americano -g
+
+### Usage
+
+    americano blog
+
+### Output
+
+    create: blog
+    create: blog/package.json
+    create: blog/config.coffee
+    create: blog/server.coffee
+    create: blog/README.md
+    create: blog/client/public
+    create: blog/server/models
+    create: blog/server/controllers
+    create: blog/server/controllers/routes.coffee
+    create: blog/server/controllers/index.coffee
+      
+    install dependencies:
+    $ cd blog && npm install
+
+    Run your application:
+    $ npm start
+
+### JS Usage
+
+    americano --js blog
+
+### Handmade
+
+To write an Americano application you need to add it as dependency of your
 package.json file.
 
     npm install americano --save

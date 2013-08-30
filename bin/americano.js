@@ -13,6 +13,7 @@ var exec = require('child_process').exec
 program
   .version(version)
   .usage('[options] [dir]')
+  .option('-j, --js', 'Generate Javascript files instead of Coffee files.')
   .parse(process.argv);
 
 // Path
@@ -24,25 +25,34 @@ var path = program.args.shift() || '.';
 var eol = os.EOL
 
 /**
-* Routes index template.
+* Templates
 */
 var routes = [
-  "coffeecups = require './coffeecups'",
+  "index = require './index'",
   "module.exports =",
-  "    'index':",
+  "    '':",
   "        get: index.index"
 ].join(eol);
 
-
-/**
-* App template.
-*/
+var routesJs = [
+  "var index = require('./index');",
+  "module.exports = {",
+  "  '': { get: index.index }",
+  "};",
+].join(eol);
 
 var app = [
-  "americano = require 'americano'",
+  "americano = require('americano')",
   "",
   "port = process.env.PORT || 3000",
   "americano.start name: '', port: port"
+].join(eol);
+
+var appJs = [
+  "var americano = require('americano');",
+  "",
+  "var port = process.env.PORT || 3000;",
+  "americano.start({name: '', port: port});"
 ].join(eol);
 
 var index = [
@@ -50,7 +60,56 @@ var index = [
   "    res.send 'Hello'"
 ].join(eol);
 
+var indexJs = [
+  "module.exports.index = function (req, res, next) {",
+  "  res.send('Hello');",
+  "};"
+].join(eol);
 
+var configuration = [
+  "americano = require 'americano'",
+  "",
+  "module.exports =",
+  "    common: [",
+  "        americano.bodyParser()",
+  "        americano.methodOverride()",
+  "        americano.errorHandler",
+  "            dumpExceptions: true",
+  "            showStack: true",
+  "        americano.static __dirname + '/client/public',",
+  "            maxAge: 86400000",
+  "    ]",
+  "    development: [",
+  "        americano.logger 'dev'",
+  "    ]",
+  "    production: [",
+  "        americano.logger 'short'",
+  "    ]"
+].join(eol);
+
+var configurationJs = [
+  "var americano = require('americano');",
+  "",
+  "module.exports = {",
+  "    common: [",
+  "        americano.bodyParser(),",
+  "        americano.methodOverride(),",
+  "        americano.errorHandler({",
+  "            dumpExceptions: true,",
+  "            showStack: true",
+  "        }),",
+  "        americano.static(__dirname + '/client/public', {",
+  "            maxAge: 86400000",
+  "        })",
+  "    ],",
+  "    development: [",
+  "        americano.logger('dev')",
+  "    ],",
+  "    production: [",
+  "        americano.logger('short')",
+  "    ]",
+  "};"
+].join(eol);
 
 
 // Generate application
@@ -73,26 +132,38 @@ function createApplicationAt(path) {
     console.log(' $ cd %s && npm install', path);
     console.log();
     console.log(' Run your application:');
-    console.log(' $ coffee server');
+    console.log(' $ npm start');
     console.log();
   });
 
   mkdir(path, function(){
+    var extension = '.coffee';
+    var scripts = { start: 'coffee server.coffee' };
+    if (program.js) {
+      routes = routesJs;
+      index = indexJs;
+      configuration = configurationJs;
+      app = appJs;
+      extension = '.js';
+      scripts = { start: 'node server.js' }
+    };
     mkdir(path + '/client/public');
     mkdir(path + '/server/models');
     mkdir(path + '/server/controllers', function() {
-      write(path + '/server/controllers/route.coffee', routes);
-      write(path + '/server/controllers/index.coffee', index);
+      write(path + '/server/controllers/routes' + extension, routes);
+      write(path + '/server/controllers/index' + extension, index);
     });
 
     var pkg = {
-        name: 'application-name',
+        name: path,
         version: '0.0.1',
-        scripts: { start: 'coffee server' },
-        dependencies: { americano: "0.2.0" }
+        scripts: scripts,
+        dependencies: { americano: version }
     }
     write(path + '/package.json', JSON.stringify(pkg, null, 2));
-    write(path + '/server.coffee', app);
+    write(path + '/config' + extension, configuration);
+    write(path + '/server' + extension, app);
+    write(path + '/README.md', '');
   });
 }
 
@@ -119,7 +190,7 @@ function emptyDirectory(path, fn) {
 
 function write(path, str) {
   fs.writeFile(path, str);
-  console.log(' \x1b[36mcreate\x1b[0m : ' + path);
+  console.log(' \x1b[36mcreate\x1b[0m: ' + path);
 }
 
 /**

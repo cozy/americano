@@ -171,8 +171,6 @@ to make [Cozy](http://cozy.io) application faster.
 Here is what I would like to do next:
 
 * write tests
-* make a binary to add scaffolding to Americano (take advantage of 
-  [scaffolt](https://github.com/paulmillr/scaffolt)?)
 * make a plugin for mongoose and facilitate its integration.
 
 I didn't start any development yet, so you're welcome to participate!

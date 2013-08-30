@@ -10,7 +10,7 @@
       "url": "https://github.com/frankrousseau/americano/blob/master/LICENSE"
     }
   ],
-  "version": "0.2.1",
+  "version": "0.2.2",
   "bin": {
     "americano": "./bin/americano"
   },

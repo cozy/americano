@@ -11,6 +11,9 @@
     }
   ],
   "version": "0.2.0",
+  "bin": {
+    "americano": "./bin/americano"
+  },
   "bugs": {
     "url": "https://github.com/frankrousseau/americano/issues"
   },

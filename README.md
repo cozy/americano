@@ -40,15 +40,15 @@ There is a binary provided with Americano to start quickly your project:
 
     create: blog
     create: blog/package.json
-    create: blog/config.coffee
     create: blog/server.coffee
     create: blog/README.md
     create: blog/client/public
+    create: blog/server/config.coffee
     create: blog/server/models
     create: blog/server/controllers
     create: blog/server/controllers/routes.coffee
     create: blog/server/controllers/index.coffee
-      
+
     install dependencies:
     $ cd blog && npm install
 
@@ -81,7 +81,7 @@ Americano requires a config file located at the
 root of your project, let's add it:
 
 ```coffeescript
-# ./config.coffee
+# ./server/config.coffee
 americano = require 'americano'
 
 config =
@@ -144,8 +144,8 @@ By the way this is how your single-page app looks like with Americano:
 
     your-blog/
         server.coffee
-        config.coffee
         server/
+            config.coffee
             controllers/
                 routes.coffee
                 posts.coffee
@@ -163,7 +163,7 @@ and more straightforward things.
 
 Actually there is only one plugin, feel free to add yours:
 
-* [americano-cozy](https://github.com/frankrousseau/americano-cozy): a plugin 
+* [americano-cozy](https://github.com/frankrousseau/americano-cozy): a plugin
 to make [Cozy](http://cozy.io) application faster.
 
 ## What about contributions?

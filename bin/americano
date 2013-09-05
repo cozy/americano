@@ -152,6 +152,7 @@ function createApplicationAt(path) {
     mkdir(path + '/server/controllers', function() {
       write(path + '/server/controllers/routes' + extension, routes);
       write(path + '/server/controllers/index' + extension, index);
+      write(path + '/server/config' + extension, configuration);
     });
 
     var pkg = {
@@ -161,7 +162,6 @@ function createApplicationAt(path) {
         dependencies: { americano: version }
     }
     write(path + '/package.json', JSON.stringify(pkg, null, 2));
-    write(path + '/config' + extension, configuration);
     write(path + '/server' + extension, app);
     write(path + '/README.md', '');
   });

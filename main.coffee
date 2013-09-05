@@ -34,7 +34,7 @@ config =
 # Load configuration file then load configuration for each environment.
 americano._configure = (app) ->
     try
-        config = require "#{root}/config"
+        config = require "#{root}/server/config"
     catch err
         console.log err
         console.log "[WARN] Can't load config file, use default one instead"

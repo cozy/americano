@@ -4,7 +4,7 @@
 is an awesome tool to build small web application. But once you start
 using it, you discover that writing the configuration and the routes
 often leads to ugly code. To solve that, Americano acts as a
-wrapper around Express and make it more opiniated about how to write routes
+wrapper around Express and make it more opinionated about how to write routes
 and configuration. See in the following how it make things cleaner.
 
 ## When to use Americano?
@@ -124,7 +124,7 @@ and more straightforward things.
 
 Actually there is only one plugin, feel free to add yours:
 
-* [americano-cozy](https://github.com/frankrousseau/americano-cozy): a plugin 
+* [americano-cozy](https://github.com/frankrousseau/americano-cozy): a plugin
 to make [Cozy](http://cozy.io) application faster.
 
 ## What about contributions?
@@ -132,7 +132,7 @@ to make [Cozy](http://cozy.io) application faster.
 Here is what I would like to do next:
 
 * write tests
-* make a binary to add scaffolding to Americano (take advantage of 
+* make a binary to add scaffolding to Americano (take advantage of
   [scaffolt](https://github.com/paulmillr/scaffolt)?)
 * make a plugin for mongoose and facilitate its integration.
 

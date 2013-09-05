@@ -4,7 +4,7 @@
 is an awesome tool to build small web application. But once you start
 using it, you discover that writing the configuration and the routes
 often leads to ugly code. To solve that, Americano acts as a
-wrapper around Express and make it more opiniated about how to write routes
+wrapper around Express and make it more opinionated about how to write routes
 and configuration. See in the following how it make things cleaner.
 
 ## When to use Americano?

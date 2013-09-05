@@ -121,12 +121,12 @@ comments = require './comments'
 
 module.exports =
     'posts':
-        get: posts.all
-        post: posts.create
+        get: blogs.all
+        post: blogs.create
     'posts/:id':
-        get: posts.show
-        put: posts.modify
-        delete: posts.delete
+        get: blogs.show
+        put: blogs.modify
+        delete: blogs.delete
     'posts/:id/comments':
         get: comments.fromPost
     'comments':

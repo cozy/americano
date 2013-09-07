@@ -96,7 +96,7 @@ americano._loadPlugin = (app, plugin, callback) ->
         americano extends plugin
 
         # run the plugin initializer
-        plugin.configure root, app, callback
+        americano.configure root, app, callback
     catch err
         callback err
 

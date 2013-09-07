@@ -84,7 +84,12 @@ americano._loadRoute = (app, path, verb, controller) ->
 americano._loadPlugin = (app, plugin, callback) ->
     console.log "[INFO] add plugin: #{plugin}"
     try
-        require("#{root}/node_modules/#{plugin}").configure root, app, callback
+        plugin = require("#{root}/node_modules/#{plugin}")
+        # merge plugin's properties into the americano instance
+        americano extends plugin
+
+        # run the plugin initializer
+        plugin.configure root, app, callback
     catch err
         callback err
 

@@ -174,7 +174,6 @@ Here is what I would like to do next:
 * make a plugin for socket-io
 * make a plugin for mongoose
 * make a plugin for sqlite
-* make a plugin for socket-io
 * make a plugin for cozy-realtime-adapter
 
 I didn't start any development yet, so you're welcome to participate!

@@ -171,6 +171,10 @@ to make [Cozy](http://cozy.io) application faster.
 Here is what I would like to do next:
 
 * write tests
-* make a plugin for mongoose and facilitate its integration.
+* make a plugin for socket-io
+* make a plugin for mongoose
+* make a plugin for sqlite
+* make a plugin for socket-io
+* make a plugin for cozy-realtime-adapter
 
 I didn't start any development yet, so you're welcome to participate!

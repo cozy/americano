@@ -13,7 +13,7 @@ var exec = require('child_process').exec
 program
   .version(version)
   .usage('[options] [dir]')
-  .option('-j, --js', 'Generate Javascript files instead of Coffee files.')
+  .option('-c, --coffee', 'Generate Javascript files instead of Coffee files.')
   .parse(process.argv);
 
 // Path
@@ -139,7 +139,7 @@ function createApplicationAt(path) {
   mkdir(path, function(){
     var extension = '.coffee';
     var scripts = { start: 'coffee server.coffee' };
-    if (program.js) {
+    if (!program.coffee) {
       routes = routesJs;
       index = indexJs;
       configuration = configurationJs;

@@ -72,7 +72,10 @@ americano._loadRoutes = (app) ->
 # Load given route in the Express app.
 americano._loadRoute = (app, path, verb, controller) ->
     try
-        app[verb] "/#{path}", controller
+        if verb is "param"
+            app.param path, controller
+        else
+            app[verb] "/#{path}", controller
     catch err
         console.log "[ERROR] Can't load controller for " + \
                     "route #{verb} #{path} #{action}"

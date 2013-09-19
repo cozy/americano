@@ -103,7 +103,6 @@ americano._loadPlugins = (app, callback) ->
                 if err
                     console.log "[ERROR] #{plugin} failed to load."
                     console.log err
-                    process.exit 1
                 else
                     console.log "[INFO] #{plugin} loaded."
                 _loadPluginList list

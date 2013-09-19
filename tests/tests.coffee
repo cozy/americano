@@ -3,6 +3,10 @@ americano = require('../main')
 
 request = require('request-json')
 
+if process.env.NODE_ENV isnt 'test'
+    console.log "Tests should be run with NODE_ENV=test"
+    process.exit 1
+
 # Configuration
 describe '_configureEnv', ->
     it 'should add given middlewares to given app and environment', (done) ->

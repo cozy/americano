@@ -131,8 +131,8 @@ americano._loadPlugins = (app, callback) ->
 americano._new = (callback) ->
     app = americano()
     americano._configure app
-    americano._loadRoutes app
     americano._loadPlugins app, ->
+        americano._loadRoutes app
         callback app
 
 

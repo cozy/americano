@@ -3,6 +3,10 @@ americano = require('../main')
 
 request = require('request-json')
 
+if process.env.NODE_ENV isnt 'test'
+    console.log "Tests should be run with NODE_ENV=test"
+    process.exit 1
+
 # Configuration
 describe '_configureEnv', ->
     it 'should add given middlewares to given app and environment', (done) ->
@@ -41,6 +45,22 @@ describe '_loadRoute', ->
                     expect(body.msg).to.equal msg
                     server.close()
                     done()
+
+    it 'should support param routes', (done) ->
+        americano.start {}, (app, server) ->
+            client = request.newClient 'http://localhost:3000/'
+
+            americano._loadRoute app, 'testid', 'param', (req, res, next, id) ->
+                req.doubledid = id * 2
+                next()
+
+            americano._loadRoute app, 'test/:testid', 'get', (req, res) ->
+                res.send doubled: req.doubledid
+
+            client.get 'test/12', (err, res, body) ->
+                expect(body.doubled).to.equal 24
+                server.close()
+                done()
 
 # Plugins
 

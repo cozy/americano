@@ -40,14 +40,14 @@ There is a binary provided with Americano to start quickly your project:
 
     create: blog
     create: blog/package.json
-    create: blog/server.coffee
+    create: blog/server.js
     create: blog/README.md
     create: blog/client/public
-    create: blog/server/config.coffee
     create: blog/server/models
     create: blog/server/controllers
-    create: blog/server/controllers/routes.coffee
-    create: blog/server/controllers/index.coffee
+    create: blog/server/controllers/routes.js
+    create: blog/server/controllers/index.js
+    create: blog/server/config.js
 
     install dependencies:
     $ cd blog && npm install
@@ -55,9 +55,9 @@ There is a binary provided with Americano to start quickly your project:
     Run your application:
     $ npm start
 
-#### JS Usage
+#### Coffeescript Usage
 
-    americano --js blog
+    americano --coffee blog
 
 ### Handmade
 
@@ -68,10 +68,12 @@ package.json file.
 
 Then you must to create your main file:
 
-```coffeescript
-# ./server.coffee
-americano = require 'americano'
-americano.start name: 'yourapp'
+```javascript
+// ./server.js
+var americano = require('americano');
+
+var port = process.env.PORT || 3000;
+americano.start({name: 'yourapp', port: port});
 ```
 
 
@@ -80,31 +82,29 @@ americano.start name: 'yourapp'
 Americano requires a config file located at the
 root of your project, let's add it:
 
-```coffeescript
-# ./server/config.coffee
-americano = require 'americano'
+```javascript
+// ./server/config.js
+var americano = require('americano');
 
-config =
+module.exports = {
     common: [
-        americano.bodyParser()
-        americano.methodOverride()
-        americano.errorHandler
-            dumpExceptions: true
+        americano.bodyParser(),
+        americano.methodOverride(),
+        americano.errorHandler({
+            dumpExceptions: true,
             showStack: true
-        americano.static __dirname + '/client/public',
+        }),
+        americano.static(__dirname + '/../client/public', {
             maxAge: 86400000
-    ]
+        })
+    ],
     development: [
-        americano.logger 'dev'
-    ]
+        americano.logger('dev')
+    ],
     production: [
-        americano.logger 'short'
+        americano.logger('short')
     ]
-    plugins: [
-        'americano-cozy'
-    ]
-
-module.exports = config
+};
 ```
 
 
@@ -114,45 +114,53 @@ Once configuration is done, Americano will ask for your routes to be described
 in a single file following this syntax:
 
 
-```coffeescript
-# ./server/controllers/routes.coffee
-posts = require './posts'
-comments = require './comments'
+```javascript
+// ./server/controllers/routes.coffee
+var posts = require('./posts');
+var comments = require('./comments');
 
-module.exports =
-    'posts':
-        get: posts.all
-        post: posts.create
-    'posts/:id':
-        get: posts.show
-        put: posts.modify
-        delete: posts.delete
-    'posts/:id/comments':
-        get: comments.fromPost
-    'comments':
-        get: comments.all
+module.exports = {
+  'posts': {
+    get: posts.all,
+    post: posts.create
+  },
+  'posts/:id': {
+    get: posts.show,
+    put: posts.modify,
+    del: posts.destroy
+  },
+  'posts/:id/comments': {
+    get: comments.fromPost
+  },
+  'comments': {
+    get: comments.all
+  }
+};
 ```
 
+## Controllers
+
+Your controllers can be written as usual, they are ExpressJS controlllers.
 
 ## Final thoughts
 
-You're done! Just run `coffee server.coffee` and you have your configured
+You're done! Just run `node server.js` and you have your configured
 Express web server up and running!
 
 By the way this is how your single-page app looks like with Americano:
 
 
     your-blog/
-        server.coffee
+        server.js
         server/
-            config.coffee
+            config.js
             controllers/
-                routes.coffee
-                posts.coffee
-                comments.coffee
+                routes.js
+                posts.js
+                comments.js
             models/
-                post.coffee
-                comment.coffee
+                post.js
+                comment.js
         client/
             ... front-end stuff ...
 
@@ -171,6 +179,9 @@ to make [Cozy](http://cozy.io) application faster.
 Here is what I would like to do next:
 
 * write tests
-* make a plugin for mongoose and facilitate its integration.
+* make a plugin for socket-io
+* make a plugin for mongoose
+* make a plugin for sqlite
+* make a plugin for cozy-realtime-adapter
 
 I didn't start any development yet, so you're welcome to participate!

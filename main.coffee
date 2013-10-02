@@ -86,8 +86,20 @@ americano._loadRoute = (app, path, verb, controller) ->
 # Load given plugin by requiring it and running it as a function.
 americano._loadPlugin = (app, plugin, callback) ->
     console.log "[INFO] add plugin: #{plugin}"
+
+    # Enable absolute path for plugins
+    if plugin.indexOf('/') is -1
+        pluginPath = "#{root}/node_modules/#{plugin}"
+    else
+        pluginPath = "#{root}/#{plugin}"
+
     try
-        require("#{root}/node_modules/#{plugin}").configure root, app, callback
+        plugin = require pluginPath
+        # merge plugin's properties into the americano instance
+        americano extends plugin
+
+        # run the plugin initializer
+        americano.configure root, app, callback
     catch err
         callback err
 
@@ -119,8 +131,8 @@ americano._loadPlugins = (app, callback) ->
 americano._new = (callback) ->
     app = americano()
     americano._configure app
-    americano._loadRoutes app
     americano._loadPlugins app, ->
+        americano._loadRoutes app
         callback app
 
 

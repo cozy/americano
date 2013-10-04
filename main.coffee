@@ -140,13 +140,14 @@ americano._new = (callback) ->
 americano.start = (options, callback) ->
     process.env.NODE_ENV = 'development' unless process.env.NODE_ENV?
     port = options.port || 3000
+    host = options.host || "127.0.0.1"
     root = options.root if options.root?
     name = options.name || "Americano"
 
     americano._new (app) ->
-        server = app.listen port
-        console.info "[INFO] Configuration for #{process.env.NODE_ENV} loaded."
-        console.info "[INFO] #{name} server is listening on " + \
-                    "port #{port}..."
+        server = app.listen port, host, ->
+            console.info "[INFO] Configuration for #{process.env.NODE_ENV} loaded."
+            console.info "[INFO] #{name} server is listening on " + \
+                      "port #{port}..."
 
-        callback app, server if callback?
+            callback app, server if callback?

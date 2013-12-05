@@ -111,6 +111,7 @@ americano._loadPlugins = (app, callback) ->
     _loadPluginList = (list) ->
         if list.length > 0
             plugin = list.pop()
+
             americano._loadPlugin app, plugin, (err) ->
                 if err
                     console.log "[ERROR] #{plugin} failed to load."

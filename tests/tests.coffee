@@ -63,5 +63,11 @@ describe '_loadRoute', ->
                 done()
 
 # Plugins
+describe '_loadPlugin', ->
+    it 'should add plugin to given app', (done) ->
+        americano.start root: './tests', (app, server) ->
+            americano._loadPlugin app, 'myplugins', ->
+                expect(americano.getModel()).to.equal 42
+                done()
 
 # Create new server

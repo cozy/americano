@@ -44,11 +44,24 @@ americano._configure = (app) ->
 
 # Load express/connect middlewares found in the configuration file.
 americano._configureEnv = (app, env, middlewares) ->
+    applyMiddlewares = ->
+        if middlewares instanceof Array
+            app.use middleware for middleware in middlewares
+        else
+            for method, elements of middlewares
+                if method is 'use'
+                    app.use element for element in elements
+                if method is 'use'
+                else
+                    for key, value of elements
+                        app[method].apply(app, [key, value])
+                        app.get key
+
     if env is 'common'
-        app.use middleware for middleware in middlewares
+        applyMiddlewares()
     else
         app.configure env, =>
-            app.use middleware for middleware in middlewares
+            applyMiddlewares()
 
 
 # Load all routes found in the routes file.

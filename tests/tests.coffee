@@ -31,6 +31,27 @@ describe '_configureEnv', ->
                     done()
                 , false
 
+describe '_configureEnv with object', ->
+    it 'should add given middlewares and variable to given app', (done) ->
+        middlewares =
+            use: [americano.bodyParser()]
+            set:
+                mydata: 'ok'
+        americano.start {}, (app, server) ->
+            client = request.newClient 'http://localhost:3000/'
+
+            americano._configureEnv app, 'common', middlewares
+            expect(app.get 'mydata').to.equal 'ok'
+            app.post '/test-1/', (req, res) ->
+                expect(req.body.name).to.be.equal 'name_test'
+                res.send ok: true, 200
+
+            client.post 'test-1/', name: 'name_test', (err, res, body) ->
+                expect(err).to.be.null
+                expect(body.ok).to.be.true
+                server.close()
+                done()
+
 # Routes
 describe '_loadRoute', ->
     it 'should add route to given app', (done) ->

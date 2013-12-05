@@ -42,26 +42,26 @@ americano._configure = (app) ->
     for env, middlewares of config
         americano._configureEnv app, env, middlewares
 
+
 # Load express/connect middlewares found in the configuration file.
+# If set or engine properties are written they are applied too.
+# beforeStart and afterStat method are also set on given application.
 americano._configureEnv = (app, env, middlewares) ->
     applyMiddlewares = ->
         if middlewares instanceof Array
             app.use middleware for middleware in middlewares
         else
             for method, elements of middlewares
-                if method is 'use'
-                    app.use element for element in elements
-                if method is 'use'
+                if method in ['beforeStart', 'afterStart']
+                    app[method] = elements
+                else if method is 'use'
+                    app[method] element for element in elements
                 else
                     for key, value of elements
-                        app[method].apply(app, [key, value])
+                        app[method].apply app, [key, value]
                         app.get key
 
-    if env is 'common'
-        applyMiddlewares()
-    else
-        app.configure env, =>
-            applyMiddlewares()
+    applyMiddlewares() if env is 'common' or env is app.get 'env'
 
 
 # Load all routes found in the routes file.
@@ -159,7 +159,10 @@ americano.start = (options, callback) ->
     name = options.name || "Americano"
 
     americano._new (app) ->
+        if app.beforeStart?
+            app.beforeStart()
         server = app.listen port, host, ->
+            app.afterStart() if app.afterStart?
             console.info "[INFO] Configuration for #{process.env.NODE_ENV} loaded."
             console.info "[INFO] #{name} server is listening on " + \
                       "port #{port}..."

@@ -1,2 +1,6 @@
 module.exports =
-    common: []
+    common:
+        beforeStart: ->
+            @set 'before', 'good'
+        afterStart: ->
+            @set 'after', 'still good'

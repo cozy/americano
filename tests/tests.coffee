@@ -25,21 +25,22 @@ describe '_configureEnv', ->
                 app.post '/test-2/', (req, res) ->
                     expect(req.body.name).to.be.equal 'name_test'
                     res.send 200
-                client.post 'test-2/', name: 'name_test', (err, res, body) ->
+                data = name: 'name_test'
+                client.post 'test-2/', data, (err, res, body) ->
                     expect(err).to.be.null
                     server.close()
                     done()
                 , false
 
-describe '_configureEnv with object', ->
-    it 'should add given middlewares and variable to given app', (done) ->
+describe '_configurEnv with object', ->
+    it 'should add given middlewares apply set properties', (done) ->
+        client = request.newClient 'http://localhost:3000/'
         middlewares =
             use: [americano.bodyParser()]
             set:
                 mydata: 'ok'
-        americano.start {}, (app, server) ->
-            client = request.newClient 'http://localhost:3000/'
 
+        americano.start {}, (app, server) ->
             americano._configureEnv app, 'common', middlewares
             expect(app.get 'mydata').to.equal 'ok'
             app.post '/test-1/', (req, res) ->
@@ -51,6 +52,15 @@ describe '_configureEnv with object', ->
                 expect(body.ok).to.be.true
                 server.close()
                 done()
+
+
+describe '_configureEnv with beforeStart and afterStart', ->
+    it 'should run given methods before and after application starts', (done) ->
+        americano.start {}, (app, server) ->
+            expect(app.get 'before').to.be.equal 'good'
+            expect(app.get 'after').to.be.equal 'still good'
+            server.close()
+            done()
 
 # Routes
 describe '_loadRoute', ->

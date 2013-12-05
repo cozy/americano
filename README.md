@@ -87,23 +87,28 @@ root of your project, let's add it:
 var americano = require('americano');
 
 module.exports = {
-    common: [
-        americano.bodyParser(),
-        americano.methodOverride(),
-        americano.errorHandler({
-            dumpExceptions: true,
-            showStack: true
-        }),
-        americano.static(__dirname + '/../client/public', {
-            maxAge: 86400000
-        })
+  common: [
+    americano.bodyParser(),
+    americano.methodOverride(),
+    americano.errorHandler({
+      dumpExceptions: true,
+      showStack: true
+    }),
+    americano.static(__dirname + '/../client/public', {
+      maxAge: 86400000
+    })
+  ],
+  development: {
+    use: [
+      americano.logger('dev')
     ],
-    development: [
-        americano.logger('dev')
-    ],
-    production: [
-        americano.logger('short')
-    ]
+    set: {
+      debug: 'on'
+    }
+  },
+  production: [
+    americano.logger('short')
+  ]
 };
 ```
 
@@ -178,7 +183,6 @@ to make [Cozy](http://cozy.io) application faster.
 
 Here is what I would like to do next:
 
-* write tests
 * make a plugin for socket-io
 * make a plugin for mongoose
 * make a plugin for sqlite

@@ -10,7 +10,7 @@
       "url": "https://github.com/mycozycloud/americano/blob/master/LICENSE"
     }
   ],
-  "version": "0.2.12",
+  "version": "0.2.13",
   "bin": {
     "americano": "./bin/americano"
   },

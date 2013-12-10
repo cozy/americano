@@ -61,7 +61,7 @@ There is a binary provided with Americano to start quickly your project:
 
 ### Handmade
 
-To write an Americano application you need to add it as dependency of your
+To write an Americano application you need to add it as a dependency of your
 package.json file.
 
     npm install americano --save

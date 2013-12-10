@@ -16,6 +16,8 @@ root = process.cwd()
 config =
     common: [
         americano.bodyParser()
+        americano.json()
+        americano.urlencoded()
         americano.methodOverride()
         americano.errorHandler
             dumpExceptions: true

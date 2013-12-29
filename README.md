@@ -132,7 +132,7 @@ module.exports = {
   'posts/:id': {
     get: posts.show,
     put: posts.modify,
-    del: posts.destroy
+    del: [posts.verifyToken, posts.destroy]
   },
   'posts/:id/comments': {
     get: comments.fromPost

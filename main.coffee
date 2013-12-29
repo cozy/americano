@@ -93,7 +93,10 @@ americano._loadRoute = (app, path, verb, controller) ->
         if verb is "param"
             app.param path, controller
         else
-            app[verb] "/#{path}", controller
+            if controller instanceof Array
+                app[verb].apply app, ["/#{path}"].concat controller
+            else
+                app[verb] "/#{path}", controller
     catch err
         log.error "Can't load controller for " + \
                     "route #{verb} #{path} #{action}"

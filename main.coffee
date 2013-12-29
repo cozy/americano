@@ -4,6 +4,9 @@
 
 express = require 'express'
 fs = require 'fs'
+log = require('printit')
+    date: true
+    prefix: 'americano'
 
 
 # americano wraps express
@@ -39,7 +42,7 @@ americano._configure = (app) ->
         config = require "#{root}/server/config"
     catch err
         console.log err
-        console.log "[WARN] Can't load config file, use default one instead"
+        log.warn "Can't load config file, use default one instead"
 
     for env, middlewares of config
         americano._configureEnv app, env, middlewares
@@ -72,16 +75,16 @@ americano._loadRoutes = (app) ->
         routes = require "#{root}/server/controllers/routes"
     catch err
         console.log err
-        console.log "[WARN] Route configuration file is missing, make " + \
+        log.warn "Route configuration file is missing, make " + \
                     "sure routes.(coffee|js) is located at the root of" + \
                     " the controlllers folder."
-        console.log "[WARN] No routes loaded"
+        log.warn "No routes loaded"
 
     for path, controllers of routes
         for verb, controller of controllers
             americano._loadRoute app, path, verb, controller
 
-    console.log "[INFO] Routes loaded."
+    log.info "Routes loaded."
 
 
 # Load given route in the Express app.
@@ -92,7 +95,7 @@ americano._loadRoute = (app, path, verb, controller) ->
         else
             app[verb] "/#{path}", controller
     catch err
-        console.log "[ERROR] Can't load controller for " + \
+        log.error "Can't load controller for " + \
                     "route #{verb} #{path} #{action}"
         console.log err
         process.exit 1
@@ -100,7 +103,7 @@ americano._loadRoute = (app, path, verb, controller) ->
 
 # Load given plugin by requiring it and running it as a function.
 americano._loadPlugin = (app, plugin, callback) ->
-    console.log "[INFO] add plugin: #{plugin}"
+    log.info "add plugin: #{plugin}"
 
     # Enable absolute path for plugins
     if plugin.indexOf('/') is -1
@@ -129,10 +132,10 @@ americano._loadPlugins = (app, callback) ->
 
             americano._loadPlugin app, plugin, (err) ->
                 if err
-                    console.log "[ERROR] #{plugin} failed to load."
+                    log.error "#{plugin} failed to load."
                     console.log err
                 else
-                    console.log "[INFO] #{plugin} loaded."
+                    log.info "#{plugin} loaded."
                 _loadPluginList list
         else
             callback()
@@ -165,8 +168,8 @@ americano.start = (options, callback) ->
             app.beforeStart()
         server = app.listen port, host, ->
             app.afterStart() if app.afterStart?
-            console.info "[INFO] Configuration for #{process.env.NODE_ENV} loaded."
-            console.info "[INFO] #{name} server is listening on " + \
+            log.info "Configuration for #{process.env.NODE_ENV} loaded."
+            log.info " #{name} server is listening on " + \
                       "port #{port}..."
 
             callback app, server if callback?

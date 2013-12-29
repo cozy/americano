@@ -172,7 +172,7 @@ americano.start = (options, callback) ->
         server = app.listen port, host, ->
             app.afterStart() if app.afterStart?
             log.info "Configuration for #{process.env.NODE_ENV} loaded."
-            log.info " #{name} server is listening on " + \
+            log.info "#{name} server is listening on " + \
                       "port #{port}..."
 
             callback app, server if callback?

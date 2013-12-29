@@ -77,6 +77,28 @@ describe '_loadRoute', ->
                     server.close()
                     done()
 
+    it 'should add several controllers for given route to app', (done) ->
+        americano.start {}, (app, server) ->
+            client = request.newClient 'http://localhost:3000/'
+
+            client.get 'test/', (err, res, body) ->
+                expect(err).not.to.be.null
+
+                msg = 'test ok'
+                msg2 = 'test array ok'
+                americano._loadRoute app, 'test/', 'get', [
+                    (req, res, next) ->
+                        req.mytest = msg2
+                        next()
+                    (req, res) -> res.send msg: msg, msg2: req.mytest
+                ]
+                client.get 'test/', (err, res, body) ->
+                    expect(err).to.be.null
+                    expect(body.msg).to.equal msg
+                    expect(body.msg2).to.equal msg2
+                    server.close()
+                    done()
+
     it 'should support param routes', (done) ->
         americano.start {}, (app, server) ->
             client = request.newClient 'http://localhost:3000/'

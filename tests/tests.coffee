@@ -1,7 +1,9 @@
 expect = require('chai').expect
-americano = require('../main')
+request = require 'request-json'
+exec = require('child_process').exec
 
-request = require('request-json')
+americano = require '../main'
+
 
 if process.env.NODE_ENV isnt 'test'
     console.log "Tests should be run with NODE_ENV=test"
@@ -117,10 +119,23 @@ describe '_loadRoute', ->
 
 # Plugins
 describe '_loadPlugin', ->
-    it 'should add plugin to given app', (done) ->
+    before (done) ->
+        command = "cp -R ./fixtures/installed-plugin-test ../node_modules"
+        exec command, done
+
+    it 'should add plugin to given app when path is absolute', (done) ->
         americano.start root: './tests', (app, server) ->
-            americano._loadPlugin app, 'myplugins', ->
+            pluginPath = '../node_modules/installed-plugin-test/main'
+            americano._loadPlugin app, pluginPath, (err) ->
+                expect(err).not.to.exist
                 expect(americano.getModel()).to.equal 42
-                done()
+                server.close done
+
+    it 'should add plugin to given app when path is relative', (done) ->
+        americano.start root: './tests', (app, server) ->
+            americano._loadPlugin app, 'installed-plugin-test', (err) ->
+                expect(err).not.to.exist
+                expect(americano.getModel()).to.equal 42
+                server.close done
 
 # Create new server

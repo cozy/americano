@@ -1,0 +1,10 @@
+{
+  "name": "installed-plugin-test",
+  "version": "0.0.1",
+  "description": "A test plugin",
+  "engines": {
+    "node": "*"
+  },
+  "main": "./main.coffee",
+  "dependencies": {}
+}

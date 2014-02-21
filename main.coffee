@@ -110,9 +110,9 @@ americano._loadPlugin = (app, plugin, callback) ->
 
     # Enable absolute path for plugins
     if plugin.indexOf('/') is -1
-        pluginPath = "#{root}/node_modules/#{plugin}"
+        pluginPath = plugin
     else
-        pluginPath = "#{root}/#{plugin}"
+        pluginPath = require('path').join root, plugin
 
     try
         plugin = require pluginPath
@@ -170,7 +170,7 @@ americano.start = (options, callback) ->
         if app.beforeStart?
             app.beforeStart()
         server = app.listen port, host, ->
-            app.afterStart() if app.afterStart?
+            app.afterStart app, server if app.afterStart?
             log.info "Configuration for #{process.env.NODE_ENV} loaded."
             log.info "#{name} server is listening on " + \
                       "port #{port}..."

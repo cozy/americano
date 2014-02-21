@@ -110,9 +110,11 @@ americano._loadPlugin = (app, plugin, callback) ->
 
     # Enable absolute path for plugins
     if plugin.indexOf('/') is -1
+        # if the plugin's path isn't absolute, we let node looking for it
         pluginPath = plugin
     else
-        pluginPath = require('path').join root, plugin
+        # otherwise it looks for the plugin from the root folder
+        pluginPath = require('path').join __dirname, root, plugin
 
     try
         plugin = require pluginPath

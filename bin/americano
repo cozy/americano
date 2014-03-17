@@ -6,6 +6,7 @@ var exec = require('child_process').exec
   , pkg = require('../package.json')
   , version = pkg.version
   , os = require('os')
+  , pathHelpers = require('path')
   , fs = require('fs');
 
 // CLI
@@ -13,7 +14,9 @@ var exec = require('child_process').exec
 program
   .version(version)
   .usage('[options] [dir]')
+  .option('-n, --new', 'Generate a new application in the given folder.')
   .option('-c, --coffee', 'Generate Coffeescript files instead of Javascript files.')
+  .option('-d, --makedocs', 'Generate API doc for given folder.')
   .parse(process.argv);
 
 // Path
@@ -112,13 +115,6 @@ var configurationJs = [
   "    ]",
   "};"
 ].join(eol);
-
-
-// Generate application
-
-(function createApplication(path) {
-  createApplicationAt(path);
-})(path);
 
 /**
 * Create application at the given directory `path`.
@@ -219,4 +215,41 @@ function mkdir(path, fn) {
 function abort(str) {
   console.error(str);
   process.exit(1);
+}
+
+/**
+* Print documentation for the server API, based on the routes file content and 
+* on the comment written in controller files.
+*
+* @param {String} str
+*/
+
+function printDoc(path) {
+  var packageContent = fs.readFileSync(pathHelpers.join(path, 'package.json'));
+  var package = JSON.parse(packageContent);
+  var routes = require(
+      pathHelpers.join(process.cwd(), 'server', 'controllers', 'routes'));
+
+  console.log('# ' + package.name);
+  console.log(" ");
+
+  for(route in routes) {
+    console.log("### /" + route);
+    console.log(" ");
+
+    for(verb in routes[route]) {
+      console.log("* " + verb.toUpperCase() + ': *no docs*');
+    }
+  }
+}
+
+
+// Generate application
+
+if (program.new) {
+  createApplicationAt(path);
+} else if (program.makedocs) {
+  printDoc(path);
+} else {
+  program.outputHelp();
 }

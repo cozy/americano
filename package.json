@@ -1,7 +1,7 @@
 {
   "name": "americano",
   "description": "Wrapper for Express that makes its configuration clean and easy.",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "author": "Cozy Cloud <contact@cozycloud.cc> (http://cozycloud.cc)",
   "licenses": [
     {
@@ -10,7 +10,11 @@
     }
   ],
   "keywords": [
-    "framework", "web", "api", "rest", "express"
+    "framework",
+    "web",
+    "api",
+    "rest",
+    "express"
   ],
   "bin": {
     "americano": "./bin/americano"
@@ -19,10 +23,10 @@
     "url": "https://github.com/mycozycloud/americano/issues"
   },
   "contributors": [
-      "Frank Rousseau", 
-      "Joseph Silvestre", 
-      "Romain Foucault", 
-      "Benjamin Bouvier"
+    "Frank Rousseau",
+    "Joseph Silvestre",
+    "Romain Foucault",
+    "Benjamin Bouvier"
   ],
   "engines": {
     "node": "*"

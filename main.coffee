@@ -54,7 +54,9 @@ americano._configure = (app) ->
 americano._configureEnv = (app, env, middlewares) ->
     applyMiddlewares = ->
         if middlewares instanceof Array
-            app.use middleware for middleware in middlewares
+            for middleware in middlewares
+                middleware = [middleware] unless middleware instanceof Array
+                app.use.apply app, middleware
         else
             for method, elements of middlewares
                 if method in ['beforeStart', 'afterStart']

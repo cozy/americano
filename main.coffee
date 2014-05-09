@@ -171,12 +171,12 @@ americano.start = (options, callback) ->
     name = options.name || "Americano"
 
     americano._new (app) ->
-        if app.beforeStart?
-            app.beforeStart()
-        server = app.listen port, host, ->
-            app.afterStart app, server if app.afterStart?
-            log.info "Configuration for #{process.env.NODE_ENV} loaded."
-            log.info "#{name} server is listening on " + \
-                      "port #{port}..."
+        unless app.beforeStart? then app.beforeStart = (cb) -> cb()
+        app.beforeStart ->
+            server = app.listen port, host, ->
+                app.afterStart app, server if app.afterStart?
+                log.info "Configuration for #{process.env.NODE_ENV} loaded."
+                log.info "#{name} server is listening on " + \
+                          "port #{port}..."
 
-            callback app, server if callback?
+                callback app, server if callback?

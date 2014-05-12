@@ -79,7 +79,7 @@ americano._loadRoutes = (app) ->
         console.log err
         log.warn "Route configuration file is missing, make " + \
                     "sure routes.(coffee|js) is located at the root of" + \
-                    " the controlllers folder."
+                    " the controllers folder."
         log.warn "No routes loaded"
 
     for path, controllers of routes

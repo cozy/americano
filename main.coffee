@@ -15,12 +15,17 @@ module.exports = americano = express
 # root folder, required to find the configuration files
 root = process.cwd()
 
+# Re-bundle middlewares
+Object.defineProperty americano, 'bodyParser', value: require 'body-parser'
+Object.defineProperty americano, 'methodOverride',
+                                               value: require 'method-override'
+Object.defineProperty americano, 'errorHandler', value: require 'errorhandler'
+Object.defineProperty americano, 'logger', value: require 'morgan'
+
 # Default configuration, used if no configuration file is found.
 config =
     common: [
         americano.bodyParser()
-        americano.json()
-        americano.urlencoded()
         americano.methodOverride()
         americano.errorHandler
             dumpExceptions: true
@@ -79,9 +84,8 @@ americano._loadRoutes = (app) ->
         console.log err
         log.warn "Route configuration file is missing, make " + \
                     "sure routes.(coffee|js) is located at the root of" + \
-                    " the controlllers folder."
+                    " the controllers folder."
         log.warn "No routes loaded"
-
     for path, controllers of routes
         for verb, controller of controllers
             americano._loadRoute app, path, verb, controller

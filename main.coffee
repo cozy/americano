@@ -20,7 +20,10 @@ Object.defineProperty americano, 'bodyParser', value: require 'body-parser'
 Object.defineProperty americano, 'methodOverride',
                                                value: require 'method-override'
 Object.defineProperty americano, 'errorHandler', value: require 'errorhandler'
-Object.defineProperty americano, 'logger', value: require 'morgan'
+
+morgan  = require 'morgan'
+morgan.format 'short', '[:date] - :method :url - :status - :response-time ms -  :res[content-length]'
+Object.defineProperty americano, 'logger', value: morgan
 
 # Default configuration, used if no configuration file is found.
 config =

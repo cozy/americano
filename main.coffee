@@ -7,23 +7,32 @@ fs = require 'fs'
 log = require('printit')
     date: true
     prefix: 'americano'
+morgan  = require 'morgan'
+logFormat = \ # We don't like the default logging.
+    '[:date] - :method :url - :status - ' + \
+    ':response-time ms -  :res[content-length]'
+morgan.format 'short', logFormat
 
 
 # americano wraps express
 module.exports = americano = express
 
+
 # root folder, required to find the configuration files
 root = process.cwd()
 
-# Re-bundle middlewares
-Object.defineProperty americano, 'bodyParser', value: require 'body-parser'
-Object.defineProperty americano, 'methodOverride',
-                                               value: require 'method-override'
-Object.defineProperty americano, 'errorHandler', value: require 'errorhandler'
 
-morgan  = require 'morgan'
-morgan.format 'short', '[:date] - :method :url - :status - :response-time ms -  :res[content-length]'
-Object.defineProperty americano, 'logger', value: morgan
+# Function to put some express modules by defaults.
+_bundleMiddleware = (name, moduleName) ->
+    Object.defineProperty americano, name, value: require moduleName
+
+# Re-bundle middlewares. They are not included by default in Express but
+# for building rest APIs they are very useful.
+_bundleMiddleware 'bodyParser', 'body-parser'
+_bundleMiddleware 'methodOverride', 'method-override'
+_bundleMiddleware 'errorHandler', 'errorhandler'
+_bundleMiddleware 'logger', 'morgan'
+
 
 # Default configuration, used if no configuration file is found.
 config =
@@ -119,18 +128,18 @@ americano._loadPlugin = (app, plugin, callback) ->
 
     # Enable absolute path for plugins
     if plugin.indexOf('/') is -1
-        # if the plugin's path isn't absolute, we let node looking for it
+        # if the plugin's path isn't absolute, we let node looking for it.
         pluginPath = plugin
     else
-        # otherwise it looks for the plugin from the root folder
+        # otherwise it looks for the plugin from the root folder.
         pluginPath = require('path').join __dirname, root, plugin
 
     try
         plugin = require pluginPath
-        # merge plugin's properties into the americano instance
+        # merge plugin's properties into the americano instance.
         americano extends plugin
 
-        # run the plugin initializer
+        # run the plugin initializer.
         americano.configure root, app, callback
     catch err
         callback err

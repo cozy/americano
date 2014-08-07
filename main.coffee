@@ -130,7 +130,7 @@ americano._loadPlugin = (options, app, plugin, callback) ->
         pluginPath = plugin
     else
         # otherwise it looks for the plugin from the root folder.
-        pluginPath = path.join __dirname, options.root, plugin
+        pluginPath = path.join options.root, plugin
 
     try
         plugin = require pluginPath

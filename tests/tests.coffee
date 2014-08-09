@@ -126,8 +126,10 @@ describe '_loadPlugin', ->
     it 'should add plugin to given app when path is absolute', (done) ->
         americano.start root: __dirname, (app, server) ->
             pluginPath = 'node_modules/installed-plugin-test/main'
-            americano._loadPlugin root: __dirname, app, pluginPath, (err) ->
+            options = root: __dirname, data: 'test'
+            americano._loadPlugin options, app, pluginPath, (err) ->
                 expect(err).not.to.exist
+                expect(app.data).to.equal options.data
                 expect(americano.getModel()).to.equal 42
                 server.close done
 

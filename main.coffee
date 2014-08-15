@@ -116,8 +116,7 @@ americano._loadRoute = (app, path, verb, controller) ->
             else
                 app[verb] "/#{path}", controller
     catch err
-        log.error "Can't load controller for " + \
-                    "route #{verb} #{path} #{action}"
+        log.error "Can't load controller for route #{verb}: #{path}"
         console.log err
         process.exit 1
 

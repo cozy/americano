@@ -1,6 +1,8 @@
 plugin = {}
 
-plugin.configure = (root, app, callback) -> callback() if callback?
+plugin.configure = (options, app, callback) ->
+    app.data = options.data
+    callback() if callback?
 
 plugin.getModel = ->
     return 42

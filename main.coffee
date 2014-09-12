@@ -100,7 +100,7 @@ americano._loadRoutes = (options, app) ->
         for verb, controller of controllers
             americano._loadRoute app, reqpath, verb, controller
 
-    log.info "Routes loaded."
+    log.info "Routes loaded." unless options.silent
 
 
 # Load given route in the Express app.
@@ -114,19 +114,14 @@ americano._loadRoute = (app, reqpath, verb, controller) ->
             else
                 app[verb] "/#{reqpath}", controller
     catch err
-<<<<<<< HEAD
         log.error "Can't load controller for route #{verb}: #{path}"
-=======
-        log.error "Can't load controller for " + \
-                    "route #{verb} #{reqpath} #{action}"
->>>>>>> 802e7e311890729167ec19d6005866e38fcb0a1e
         console.log err
         process.exit 1
 
 
 # Load given plugin by requiring it and running it as a function.
 americano._loadPlugin = (options, app, plugin, callback) ->
-    log.info "add plugin: #{plugin}"
+    log.info "add plugin: #{plugin}" unless options.silent
 
     # Enable absolute path for plugins
     if plugin.indexOf('/') is -1
@@ -160,7 +155,7 @@ americano._loadPlugins = (options, app, callback) ->
                     log.error "#{plugin} failed to load."
                     console.log err
                 else
-                    log.info "#{plugin} loaded."
+                    log.info "#{plugin} loaded." unless options.silent
                 _loadPluginList list
         else
             callback()
@@ -193,9 +188,11 @@ americano.start = (options, callback) ->
         app.beforeStart ->
             server = app.listen options.port, options.host, ->
                 app.afterStart app, server if app.afterStart?
-                log.info "Configuration for #{process.env.NODE_ENV} loaded."
-                log.info "#{options.name} server is listening on " + \
-                          "port #{options.port}..."
+                unless options.silent
+                    log.info """
+Configuration for #{process.env.NODE_ENV} loaded."
+#{options.name} server is listening on port #{options.port}...
+"""
 
                 callback app, server if callback?
 
@@ -208,5 +205,6 @@ americano.newApp = (options, callback) ->
     options.name ?= "Americano"
 
     americano._new options, (app) ->
-        log.info "Configuration for #{process.env.NODE_ENV} loaded."
+        unless options.silent
+            log.info "Configuration for #{process.env.NODE_ENV} loaded."
         callback app if callback?

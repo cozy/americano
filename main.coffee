@@ -55,7 +55,7 @@ americano._configure = (options, app) ->
     try
         config = require(path.join options.root, "server", "config")
     catch err
-        console.log err
+        log.error err.stack or err
         log.warn "Can't load config file, use default one instead"
 
     for env, middlewares of config
@@ -91,7 +91,7 @@ americano._loadRoutes = (options, app) ->
         rPath = path.join options.root, "server", "controllers", "routes"
         routes = require rPath
     catch err
-        console.log err
+        log.error err.stack or err
         log.warn "Route configuration file is missing, make " + \
                     "sure routes.(coffee|js) is located at the root of" + \
                     " the controllers folder."
@@ -114,8 +114,8 @@ americano._loadRoute = (app, reqpath, verb, controller) ->
             else
                 app[verb] "/#{reqpath}", controller
     catch err
-        log.error "Can't load controller for route #{verb}: #{path}"
-        console.log err
+        log.error "Can't load controller for route #{verb}: #{reqpath}"
+        console.log err.stack or err
         process.exit 1
 
 

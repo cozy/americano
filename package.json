@@ -50,7 +50,9 @@
   },
   "scripts": {
     "prepublish": "cake build",
-    "test": "cake tests"
+    "lint": "coffeelint -f coffeelint.json main.coffee",
+    "test": "cd tests/ && NODE_ENV=test mocha tests.coffee --reporter spec --compilers coffee:coffee-script/register --colors",
+    "build": "coffee -c main.coffee"
   },
   "repository": {
     "type": "git",

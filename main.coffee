@@ -115,7 +115,7 @@ americano._loadRoute = (app, reqpath, verb, controller) ->
                 app[verb] "/#{reqpath}", controller
     catch err
         log.error "Can't load controller for route #{verb}: #{reqpath}"
-        console.log err.stack or err
+        log.raw err.stack or err
         process.exit 1
 
 
@@ -153,7 +153,7 @@ americano._loadPlugins = (options, app, callback) ->
             americano._loadPlugin options, app, plugin, (err) ->
                 if err
                     log.error "#{plugin} failed to load."
-                    console.log err
+                    log.raw err
                 else
                     log.info "#{plugin} loaded." unless options.silent
                 _loadPluginList list
@@ -170,9 +170,11 @@ americano._loadPlugins = (options, app, callback) ->
 americano._new = (options, callback) ->
     app = americano()
     americano._configure options, app
-    americano._loadPlugins options, app, ->
+    americano._loadPlugins options, app, (err) ->
+        return callback err if err
+
         americano._loadRoutes options, app
-        callback app
+        callback null, app
 
 
 # Clean options, configure the application then starts the server.
@@ -183,10 +185,16 @@ americano.start = (options, callback) ->
     options.host ?= "127.0.0.1"
     options.root ?= process.cwd()
 
-    americano._new options, (app) ->
-        unless app.beforeStart? then app.beforeStart = (cb) -> cb()
-        app.beforeStart ->
-            server = app.listen options.port, options.host, ->
+    americano._new options, (err, app) ->
+        return callback err if err
+
+        app.beforeStart = ((cb) -> cb()) unless app.beforeStart?
+        app.beforeStart (err) ->
+            return callback err if err
+
+            server = app.listen options.port, options.host, (err) ->
+                return callback err if err
+
                 app.afterStart app, server if app.afterStart?
                 unless options.silent
                     log.info """
@@ -194,7 +202,7 @@ Configuration for #{process.env.NODE_ENV} loaded."
 #{options.name} server is listening on port #{options.port}...
 """
 
-                callback app, server if callback?
+                callback null, app, server if callback?
 
 # Clean options, configure the application then returns app via a callback.
 # Useful to generate the express app for given module based on americano.
@@ -204,7 +212,10 @@ americano.newApp = (options, callback) ->
     options.host ?= "127.0.0.1"
     options.name ?= "Americano"
 
-    americano._new options, (app) ->
+    americano._new options, (err, app) ->
+        return callback err if err
+
         unless options.silent
             log.info "Configuration for #{process.env.NODE_ENV} loaded."
-        callback app if callback?
+
+        callback null, app if callback?

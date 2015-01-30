@@ -13,7 +13,7 @@ if process.env.NODE_ENV isnt 'test'
 describe '_configureEnv', ->
     it 'should add given middlewares to given app and environment', (done) ->
         middlewares = [americano.bodyParser()]
-        americano.start root: __dirname, (app, server) ->
+        americano.start root: __dirname, (err, app, server) ->
             client = request.newClient 'http://localhost:3000/'
 
             americano._configureEnv app, 'development', middlewares
@@ -42,7 +42,7 @@ describe '_configurEnv with object', ->
             set:
                 mydata: 'ok'
 
-        americano.start root: __dirname, (app, server) ->
+        americano.start root: __dirname, (err, app, server) ->
             americano._configureEnv app, 'common', middlewares
             expect(app.get 'mydata').to.equal 'ok'
             app.post '/test-1/', (req, res) ->
@@ -58,7 +58,7 @@ describe '_configurEnv with object', ->
 
 describe '_configureEnv with beforeStart and afterStart', ->
     it 'should run given methods before and after application starts', (done) ->
-        americano.start root: __dirname, (app, server) ->
+        americano.start root: __dirname, (err, app, server) ->
             expect(app.get 'before').to.be.equal 'good'
             expect(app.get 'after').to.be.equal 'still good'
             server.close()
@@ -67,7 +67,7 @@ describe '_configureEnv with beforeStart and afterStart', ->
 # Routes
 describe '_loadRoute', ->
     it 'should add route to given app', (done) ->
-        americano.start root: __dirname, (app, server) ->
+        americano.start root: __dirname, (err, app, server) ->
             client = request.newClient 'http://localhost:3000/'
             client.get 'test/', (err, res, body) ->
                 expect(err).not.to.be.null
@@ -80,7 +80,7 @@ describe '_loadRoute', ->
                     done()
 
     it 'should add several controllers for given route to app', (done) ->
-        americano.start root: __dirname, (app, server) ->
+        americano.start root: __dirname, (err, app, server) ->
             client = request.newClient 'http://localhost:3000/'
 
             client.get 'test/', (err, res, body) ->
@@ -102,7 +102,7 @@ describe '_loadRoute', ->
                     done()
 
     it 'should support param routes', (done) ->
-        americano.start root: __dirname, (app, server) ->
+        americano.start root: __dirname, (err, app, server) ->
             client = request.newClient 'http://localhost:3000/'
 
             americano._loadRoute app, 'testid', 'param', (req, res, next, id) ->
@@ -124,7 +124,7 @@ describe '_loadPlugin', ->
         exec command, done
 
     it 'should add plugin to given app when path is absolute', (done) ->
-        americano.start root: __dirname, (app, server) ->
+        americano.start root: __dirname, (err, app, server) ->
             pluginPath = 'node_modules/installed-plugin-test/main'
             options = root: __dirname, data: 'test'
             americano._loadPlugin options, app, pluginPath, (err) ->
@@ -134,7 +134,7 @@ describe '_loadPlugin', ->
                 server.close done
 
     it 'should add plugin to given app when path is relative', (done) ->
-        americano.start root: __dirname, (app, server) ->
+        americano.start root: __dirname, (err, app, server) ->
             americano._loadPlugin root: __dirname, app, 'installed-plugin-test', (err) ->
                 expect(err).not.to.exist
                 expect(americano.getModel()).to.equal 42

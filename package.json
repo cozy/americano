@@ -41,7 +41,7 @@
     "method-override": "2.0.0",
     "errorhandler": "1.0.1",
     "morgan": "1.1.1"
-  }
+  },
   "devDependencies": {
     "coffee-script": "*",
     "request-json": "0.4.10",
@@ -57,6 +57,5 @@
   "repository": {
     "type": "git",
     "url": "git://github.com/mycozycloud/americano.git"
-  },
-  "optionalDependencies": {}
+  }
 }

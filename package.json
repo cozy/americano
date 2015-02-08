@@ -43,16 +43,17 @@
     "morgan": "1.1.1"
   },
   "devDependencies": {
-    "coffee-script": "*",
-    "request-json": "0.4.10",
     "chai": "*",
-    "mocha": "*"
+    "coffee-script": "1.9.0",
+    "coffeelint": "1.8.1",
+    "mocha": "*",
+    "request-json": "0.4.10"
   },
   "scripts": {
     "prepublish": "coffee -cb main.coffee",
-    "lint": "coffeelint -f coffeelint.json main.coffee",
+    "lint": "./node_modules/coffeelint/bin/coffeelint -f coffeelint.json main.coffee",
     "test": "cd tests/ && NODE_ENV=test mocha tests.coffee --reporter spec --compilers coffee:coffee-script/register --colors",
-    "build": "coffee -cb main.coffee"
+    "build": "./node_modules/coffee-script/bin/coffee -cb main.coffee"
   },
   "repository": {
     "type": "git",

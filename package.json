@@ -49,10 +49,10 @@
     "mocha": "*"
   },
   "scripts": {
-    "prepublish": "cake build",
+    "prepublish": "coffee -cb main.coffee",
     "lint": "coffeelint -f coffeelint.json main.coffee",
     "test": "cd tests/ && NODE_ENV=test mocha tests.coffee --reporter spec --compilers coffee:coffee-script/register --colors",
-    "build": "coffee -c main.coffee"
+    "build": "coffee -cb main.coffee"
   },
   "repository": {
     "type": "git",

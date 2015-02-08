@@ -31,17 +31,23 @@ _bundleMiddleware 'errorHandler', 'errorhandler'
 _bundleMiddleware 'logger', 'morgan'
 
 
+# Use to collect middlewares to apply after routes are set
+afterMiddlewares = []
+
 # Default configuration, used if no configuration file is found.
 config =
-    common: [
-        americano.bodyParser()
-        americano.methodOverride()
-        americano.errorHandler
-            dumpExceptions: true
-            showStack: true
-        americano.static __dirname + '/../../client/public',
-            maxAge: 86400000
-    ]
+    common:
+        use: [
+            americano.bodyParser()
+            americano.methodOverride()
+            americano.static __dirname + '/../../client/public',
+                maxAge: 86400000
+        ]
+        useAfter: [
+            americano.errorHandler
+                dumpExceptions: true
+                showStack: true
+        ]
     development: [
         americano.logger 'dev'
     ]
@@ -53,7 +59,7 @@ config =
 # Load configuration file then load configuration for each environment.
 americano._configure = (options, app) ->
     try
-        config = require(path.join options.root, "server", "config")
+        config = require path.join options.root, "server", "config"
     catch err
         log.error err.stack or err
         log.warn "Can't load config file, use default one instead"
@@ -66,7 +72,8 @@ americano._configure = (options, app) ->
 # If set or engine properties are written they are applied too.
 # beforeStart and afterStat method are also set on given application.
 americano._configureEnv = (app, env, middlewares) ->
-    applyMiddlewares = ->
+
+    if env is 'common' or env is app.get 'env'
         if middlewares instanceof Array
             for middleware in middlewares
                 middleware = [middleware] unless middleware instanceof Array
@@ -77,12 +84,18 @@ americano._configureEnv = (app, env, middlewares) ->
                     app[method] = elements
                 else if method is 'use'
                     app[method] element for element in elements
+                else if method is 'useAfter'
+                    afterMiddlewares.push element for element in elements
                 else
                     for key, value of elements
                         app[method].apply app, [key, value]
                         app.get key
 
-    applyMiddlewares() if env is 'common' or env is app.get 'env'
+
+# Apply middlewares to apply after routes are set.
+americano._configureAfter = (app) ->
+    app.use middleware for middleware in afterMiddlewares
+    afterMiddlewares = []
 
 
 # Load all routes found in the routes file.
@@ -174,6 +187,7 @@ americano._new = (options, callback) ->
         return callback err if err
 
         americano._loadRoutes options, app
+        americano._configureAfter app
         callback null, app
 
 

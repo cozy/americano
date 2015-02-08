@@ -19,14 +19,14 @@ describe '_configureEnv', ->
             americano._configureEnv app, 'development', middlewares
             app.post '/test-1/', (req, res) ->
                 expect(req.body).to.be.undefined
-                res.send ok: true, 200
+                res.status(200).send ok: true
             client.post 'test-1/', name: 'name_test', (err, res, body) ->
                 expect(err).to.be.null
 
                 americano._configureEnv app, 'test', middlewares
                 app.post '/test-2/', (req, res) ->
                     expect(req.body.name).to.be.equal 'name_test'
-                    res.send 200
+                    res.sendStatus 200
                 data = name: 'name_test'
                 client.post 'test-2/', data, (err, res, body) ->
                     expect(err).to.be.null
@@ -34,8 +34,9 @@ describe '_configureEnv', ->
                     done()
                 , false
 
-describe '_configurEnv with object', ->
-    it 'should add given middlewares apply set properties', (done) ->
+
+describe '_configureEnv with object', ->
+    it 'should apply given configuration to Express app', (done) ->
         client = request.newClient 'http://localhost:3000/'
         middlewares =
             use: [americano.bodyParser()]
@@ -47,7 +48,7 @@ describe '_configurEnv with object', ->
             expect(app.get 'mydata').to.equal 'ok'
             app.post '/test-1/', (req, res) ->
                 expect(req.body.name).to.be.equal 'name_test'
-                res.send ok: true, 200
+                res.status(200).send ok: true
 
             client.post 'test-1/', name: 'name_test', (err, res, body) ->
                 expect(err).to.be.null
@@ -63,6 +64,26 @@ describe '_configureEnv with beforeStart and afterStart', ->
             expect(app.get 'after').to.be.equal 'still good'
             server.close()
             done()
+
+
+describe '_configureEnv with useAfter', ->
+
+    before (done) =>
+        # Everythin is done via config files
+        americano.start root: __dirname, (err, app, server) =>
+            @server = server
+            @app = app
+            done()
+
+    after =>
+        @server.close()
+
+    it 'should run error middleware set after routes', (done) =>
+        client = request.newClient 'http://localhost:3000/'
+        client.post 'test-error/', name: 'name_test', (err, res, body) ->
+            expect(body.message).to.be.equal 'test_error'
+            done()
+
 
 # Routes
 describe '_loadRoute', ->

@@ -87,17 +87,21 @@ root of your project, let's add it:
 var americano = require('americano');
 
 module.exports = {
-  common: [
-    americano.bodyParser(),
-    americano.methodOverride(),
-    americano.errorHandler({
-      dumpExceptions: true,
-      showStack: true
-    }),
-    americano.static(__dirname + '/../client/public', {
-      maxAge: 86400000
-    })
-  ],
+  common: { 
+    use: [
+      americano.bodyParser(),
+      americano.methodOverride(),
+      americano.static(__dirname + '/../client/public', {
+        maxAge: 86400000
+      })
+    ]
+    useAfter: [
+      americano.errorHandler({
+        dumpExceptions: true,
+        showStack: true
+      })
+    ]
+  },
   development: {
     use: [
       americano.logger('dev')

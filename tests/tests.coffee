@@ -141,7 +141,7 @@ describe '_loadRoute', ->
 # Plugins
 describe '_loadPlugin', ->
     before (done) ->
-        command = "cp -R ./fixtures/installed-plugin-test ./node_modules"
+        command = "cp -r ./fixtures/installed-plugin-test ../node_modules"
         exec command, done
 
     it 'should add plugin to given app when path is absolute', (done) ->

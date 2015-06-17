@@ -1,7 +1,7 @@
 {
   "name": "americano",
   "description": "Wrapper for Express that makes its configuration clean and easy.",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "author": "Cozy Cloud <contact@cozycloud.cc> (http://cozycloud.cc)",
   "licenses": [
     {

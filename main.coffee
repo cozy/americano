@@ -212,7 +212,7 @@ americano.start = (options, callback) ->
                 app.afterStart app, server if app.afterStart?
                 unless options.silent
                     log.info """
-Configuration for #{process.env.NODE_ENV} loaded."
+Configuration for #{process.env.NODE_ENV} loaded.
 #{options.name} server is listening on port #{options.port}...
 """
 

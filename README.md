@@ -183,7 +183,7 @@ and more straightforward things.
 Actually there is only one plugin, feel free to add yours:
 
 * [americano-cozy](https://github.com/frankrousseau/americano-cozy): a plugin
-to make [Cozy](http://cozy.io) application faster.
+to make [Cozy](https://cozy.io) application faster.
 
 ## What about contributions?
 

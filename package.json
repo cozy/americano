@@ -2,13 +2,8 @@
   "name": "americano",
   "description": "Wrapper for Express that makes its configuration clean and easy.",
   "version": "0.4.2",
-  "author": "Cozy Cloud <contact@cozycloud.cc> (http://cozycloud.cc)",
-  "licenses": [
-    {
-      "type": "MIT",
-      "url": "https://github.com/mycozycloud/americano/blob/master/LICENSE"
-    }
-  ],
+  "author": "Cozy Cloud <contact@cozycloud.cc> (https://cozy.io)",
+  "license": "MIT",
   "keywords": [
     "framework",
     "web",
@@ -20,7 +15,7 @@
     "americano": "./bin/americano"
   },
   "bugs": {
-    "url": "https://github.com/mycozycloud/americano/issues"
+    "url": "https://github.com/cozy/americano/issues"
   },
   "contributors": [
     "Frank Rousseau",
@@ -57,6 +52,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/mycozycloud/americano.git"
+    "url": "git://github.com/cozy/americano.git"
   }
 }

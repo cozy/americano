@@ -179,6 +179,17 @@ americano._loadPlugins = (options, app, callback) ->
         callback()
 
 
+# Listen for http (or https) connections
+americano._listen = (app, options, callback) ->
+    if options.tls
+        server = require('https').createServer options.tls, app
+        server.listen options.port, options.host, (err) ->
+            callback err, server
+    else
+        server = app.listen options.port, options.host, (err) ->
+            callback err, server
+
+
 # Set the express application: configure the app, load routes and plugins.
 americano._new = (options, callback) ->
     app = americano()
@@ -198,6 +209,7 @@ americano.start = (options, callback) ->
     options.name ?= "Americano"
     options.host ?= "127.0.0.1"
     options.root ?= process.cwd()
+    options.tls  ?= false
 
     americano._new options, (err, app) ->
         return callback err if err
@@ -206,7 +218,7 @@ americano.start = (options, callback) ->
         app.beforeStart (err) ->
             return callback err if err
 
-            server = app.listen options.port, options.host, (err) ->
+            americano._listen app, options, (err, server) ->
                 return callback err if err
 
                 app.afterStart app, server if app.afterStart?
@@ -217,6 +229,7 @@ Configuration for #{process.env.NODE_ENV} loaded.
 """
 
                 callback null, app, server if callback?
+
 
 # Clean options, configure the application then returns app via a callback.
 # Useful to generate the express app for given module based on americano.

@@ -1,4 +1,7 @@
+coffeelint.json
 *.coffee
 todo
 .git*
 .project
+.travis.yml
+tests

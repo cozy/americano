@@ -182,8 +182,8 @@ and more straightforward things.
 
 Actually there is only one plugin, feel free to add yours:
 
-* [americano-cozy](https://github.com/frankrousseau/americano-cozy): a plugin
-to make [Cozy](https://cozy.io) application faster.
+* [cozy-db](https://github.com/cozy/cozy-db/blob/master/DOCINDEX.md#use-with-americano):
+  a plugin to make [Cozy](https://cozy.io) application faster.
 
 ## What about contributions?
 

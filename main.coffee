@@ -185,6 +185,9 @@ americano._listen = (app, options, callback) ->
         server = require('https').createServer options.tls, app
         server.listen options.port, options.host, (err) ->
             callback err, server
+    else if options.socket
+        server = app.listen options.socket, (err) ->
+            callback err, server
     else
         server = app.listen options.port, options.host, (err) ->
             callback err, server
@@ -205,44 +208,41 @@ americano._new = (options, callback) ->
 # Clean options, configure the application then starts the server.
 americano.start = (options, callback) ->
     process.env.NODE_ENV = 'development' unless process.env.NODE_ENV?
-    options.port ?= 3000
-    options.name ?= "Americano"
-    options.host ?= "127.0.0.1"
-    options.root ?= process.cwd()
-    options.tls  ?= false
+    options.port   ?= 3000
+    options.name   ?= "Americano"
+    options.host   ?= "127.0.0.1"
+    options.root   ?= process.cwd()
+    options.tls    ?= false
+    options.socket ?= false
 
     americano._new options, (err, app) ->
-        return callback err if err
+        return callback? err if err
 
-        app.beforeStart = ((cb) -> cb()) unless app.beforeStart?
+        app.beforeStart ?= (cb) -> cb()
         app.beforeStart (err) ->
-            return callback err if err
+            return callback? err if err
 
             americano._listen app, options, (err, server) ->
-                return callback err if err
+                return callback? err if err
 
-                app.afterStart app, server if app.afterStart?
+                app.afterStart? app, server
                 unless options.silent
                     log.info """
 Configuration for #{process.env.NODE_ENV} loaded.
 #{options.name} server is listening on port #{options.port}...
 """
 
-                callback null, app, server if callback?
+                callback? null, app, server
 
 
 # Clean options, configure the application then returns app via a callback.
 # Useful to generate the express app for given module based on americano.
 # In that gase
 americano.newApp = (options, callback) ->
-    options.port ?= 3000
-    options.host ?= "127.0.0.1"
-    options.name ?= "Americano"
-
     americano._new options, (err, app) ->
-        return callback err if err
+        return callback? err if err
 
         unless options.silent
             log.info "Configuration for #{process.env.NODE_ENV} loaded."
 
-        callback null, app if callback?
+        callback? null, app

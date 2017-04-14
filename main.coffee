@@ -83,7 +83,11 @@ americano._configureEnv = (app, env, middlewares) ->
                 if method in ['beforeStart', 'afterStart']
                     app[method] = elements
                 else if method is 'use'
-                    app[method] element for element in elements
+                    for element in elements
+                        if element instanceof Array
+                            app[method] element[0], element[1]
+                        else
+                            app[method] element
                 else if method is 'useAfter'
                     afterMiddlewares.push element for element in elements
                 else
